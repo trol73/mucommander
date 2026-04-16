@@ -27,11 +27,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * CollapseExpandButton provides a expand/collapse functionality to a component: clicking the button expands/collapses
+ * CollapseExpandButton provides an expand/collapse functionality to a component: clicking the button expands/collapses
  * the associated component making it visible/unvisible, and resizes the window that contains it so that it properly
  * fits.
  *
- * <p>This button shows an down/right arrow icon to reflect the current expanded/collapsed state.
+ * <p>This button shows a down/right arrow icon to reflect the current expanded/collapsed state.
  *
  * @author Maxence Bernard
  */

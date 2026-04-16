@@ -200,10 +200,6 @@ public class CommandTest {
         assert new File(System.getProperty("user.dir")).getAbsolutePath().equals(tokens[0]);
     }
 
-
-    // - Tokenisation ----------------------------------------------------------
-    // -------------------------------------------------------------------------
-
     /**
      * Runs tests on parsing behaviour with illegal keywords.
      */

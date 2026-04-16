@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +112,7 @@ public class CheckVersionDialog extends QuestionDialog {
                 title = i18n("version_dialog.new_version_title");
 
                 // Checks if the current platform can open a new browser window
-                downloadURL = new URL(version.getDownloadURL());
+                downloadURL = new URI(version.getDownloadURL()).toURL();
                 downloadOption = DesktopManager.isOperationSupported(DesktopManager.BROWSE, new Object[] {downloadURL});
                 
                 // If the platform is not capable of opening a new browser window,

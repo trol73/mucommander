@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -683,10 +684,6 @@ public class HTTPFile extends ProtocolFile {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public boolean isHidden() {
         return false;
@@ -695,7 +692,7 @@ public class HTTPFile extends ProtocolFile {
     @Override
     public String getName() {
         try {
-            return java.net.URLDecoder.decode(super.getName(), "utf-8");
+            return java.net.URLDecoder.decode(super.getName(), StandardCharsets.UTF_8);
         } catch(Exception e) {
             return super.getName();
         }

@@ -497,7 +497,7 @@ public class DesktopManager {
      * <p>
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
-     * The goal of this method is to allow desktop to check for such non-standard behaviours.
+     * The goal of this method is to allow desktop to check for such non-standard behaviors.
      *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
@@ -514,7 +514,7 @@ public class DesktopManager {
      * <p>
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
-     * The goal of this method is to allow desktop to check for such non-standard behaviours.
+     * The goal of this method is to allow desktop to check for such non-standard behaviors.
      *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.
@@ -531,7 +531,7 @@ public class DesktopManager {
      * <p>
      * There are some cases where Java doesn't detect mouse events properly - for example,
      * <i>CONTROL + LEFT CLICK</i> is a <i>RIGHT CLICK</i> under Mac OS X.<br>
-     * The goal of this method is to allow desktop to check for such non-standard behaviours.
+     * The goal of this method is to allow desktop to check for such non-standard behaviors.
      *
      * @param  e event to check.
      * @return   <code>true</code> if the specified event is a left-click for this desktop, <code>false</code> otherwise.

@@ -180,11 +180,8 @@ public class FindFileJob extends FileJob {
     @NotNull
     private static AbstractFileFilter buildFileFilter(String fileMask, IOCase filterCase) {
         if (!fileMask.contains(",")) {
-            if (fileMask.startsWith("!")) {
-                return new NotFileFilter(new WildcardFileFilter(fileMask.substring(1).trim(), filterCase));
-            } else {
-                return new WildcardFileFilter(fileMask, filterCase);
-            }
+            String mask = fileMask.startsWith("!") ? fileMask.substring(1) : fileMask;
+            return WildcardFileFilter.builder().setWildcards(mask.trim()).setIoCase(filterCase).get();
         }
 
         return buildMultipleFileFilters(fileMask, filterCase);
@@ -205,10 +202,10 @@ public class FindFileJob extends FileJob {
                 if (notMask.isEmpty()) {
                     continue;
                 }
-                fileFilters.add(new NotFileFilter(new WildcardFileFilter(notMask, filterCase)));
+                fileFilters.add(WildcardFileFilter.builder().setWildcards(notMask).setIoCase(filterCase).get());
                 hasNot = true;
             } else {
-                fileFilters.add(new WildcardFileFilter(trimMask, filterCase));
+                fileFilters.add(WildcardFileFilter.builder().setWildcards(trimMask).setIoCase(filterCase).get());
             }
         }
         return hasNot ? new AndFileFilter(fileFilters) : new OrFileFilter(fileFilters);

@@ -47,7 +47,7 @@ public class FilePathFieldKeyListener implements KeyListener {
             if (deleteOnFirstAction) {
                 textField.removeKeyListener(this);
             }
-            if (e.getModifiers() != 0) {
+            if (e.getModifiersEx() != 0) {
                 return;
             }
             int len = textField.getText().length();
@@ -66,7 +66,7 @@ public class FilePathFieldKeyListener implements KeyListener {
             if (deleteOnFirstAction) {
                 textField.removeKeyListener(this);
             }
-            if (e.getModifiers() != 0) {
+            if (e.getModifiersEx() != 0) {
                 return;
             }
             int pos = textField.getCaretPosition();

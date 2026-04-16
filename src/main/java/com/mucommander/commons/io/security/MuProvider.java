@@ -36,7 +36,7 @@ public class MuProvider extends Provider {
     private static boolean initialized;
 
     private MuProvider() {
-        super("trolCommander", 1.0, "trolCommander's additional MessageDigest implementations.");
+        super("trolCommander", "1.0", "trolCommander's additional MessageDigest implementations.");
     }
 
     /**
@@ -47,7 +47,7 @@ public class MuProvider extends Provider {
      */
     public static void registerProvider() {
         // A Provider must be registered only once
-        if(initialized)
+        if (initialized)
             return;
 
         MuProvider provider = new MuProvider();

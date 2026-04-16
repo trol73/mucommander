@@ -140,8 +140,7 @@ public class ToolbarMoreButton extends JToggleButton implements ActionListener {
             if (!isVisible(comp[i], visibleRect)) {
                 JPopupMenu popup = new JPopupMenu();
                 for (; i < comp.length; i++) {
-                    if (comp[i] instanceof AbstractButton) {
-                        AbstractButton button = (AbstractButton) comp[i];
+                    if (comp[i] instanceof AbstractButton button) {
                         if (button.getAction() != null) {
                             popup.add(button.getAction());
                         }

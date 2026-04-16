@@ -95,7 +95,7 @@ public class TempExecJob extends TempCopyJob {
                 if (currentDestFile.getChangeablePermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION))
                     currentDestFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
             } catch(IOException e) {
-                LOGGER.debug("Caught exception while changing permissions of " + currentDestFile, e);
+                LOGGER.debug("Caught exception while changing permissions of {}", currentDestFile, e);
                 return false;
             }
         }
@@ -108,7 +108,7 @@ public class TempExecJob extends TempCopyJob {
             RecentExecutedFilesQL.addFile(file);
             return true;
         } catch(Exception e) {
-            LOGGER.debug("Caught exception while opening " + currentDestFile, e);
+            LOGGER.debug("Caught exception while opening {}", currentDestFile, e);
             return false;
         }
     }

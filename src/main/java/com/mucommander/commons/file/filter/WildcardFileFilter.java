@@ -57,7 +57,7 @@ public class WildcardFileFilter extends AbstractStringCriterionFilter {
      */
     public WildcardFileFilter(String s, boolean caseSensitive, boolean inverted) {
         super(new FilenameGenerator(), caseSensitive, inverted);
-        this.fileFilter = new org.apache.commons.io.filefilter.WildcardFileFilter(s, isCaseSensitive() ? IOCase.SENSITIVE : IOCase.INSENSITIVE);
+        this.fileFilter = org.apache.commons.io.filefilter.WildcardFileFilter.builder().setWildcards(s).setIoCase(isCaseSensitive() ? IOCase.SENSITIVE : IOCase.INSENSITIVE).get();
     }
 
 

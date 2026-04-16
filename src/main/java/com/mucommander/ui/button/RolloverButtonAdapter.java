@@ -65,24 +65,25 @@ public class RolloverButtonAdapter implements MouseListener {
     }
 
 
-    ///////////////////////////
-    // MouseListener methods //
-    ///////////////////////////
-
+    @Override
     public void mouseEntered(MouseEvent e) {
         ((JButton)e.getSource()).setBorderPainted(true);
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
         ((JButton)e.getSource()).setBorderPainted(false);
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
     }
 }

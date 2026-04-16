@@ -341,10 +341,6 @@ public class UnpackJob extends AbstractCopyJob {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     protected void jobCompleted() {
         super.jobCompleted();
@@ -377,7 +373,7 @@ public class UnpackJob extends AbstractCopyJob {
     private void calculateTotalSize(AbstractArchiveFile archiveFile) {
         totalFilesSize = 0;
         totalFilesCount = 0;
-        // get all directoires
+        // get all directories
         List<String> selectedDirectories = new ArrayList<>();
         List<ArchiveEntry> fileEntries = new ArrayList<>();
 
@@ -450,15 +446,10 @@ public class UnpackJob extends AbstractCopyJob {
 
 
 
-    ///////////////////
-    // Inner classes //
-    ///////////////////
-
     private static class ProxiedEntryFile extends ProxyFile {
-
-        private ArchiveEntry entry;
-        private AbstractArchiveFile archiveFile;
-        private ArchiveEntryIterator iterator;
+        private final ArchiveEntry entry;
+        private final AbstractArchiveFile archiveFile;
+        private final ArchiveEntryIterator iterator;
 
         ProxiedEntryFile(AbstractFile entryFile, ArchiveEntry entry, AbstractArchiveFile archiveFile, ArchiveEntryIterator iterator) {
             super(entryFile);

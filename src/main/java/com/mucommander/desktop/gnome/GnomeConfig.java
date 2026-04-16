@@ -50,14 +50,14 @@ public class GnomeConfig {
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line = br.readLine();
-                LOGGER.debug(CONFIG_COMMAND+" returned '"+line+"' for "+key);
+                LOGGER.debug(CONFIG_COMMAND+" returned '{}' for {}", line, key);
                 if (line == null || (line=line.trim()).isEmpty() || line.startsWith("No value set for")) {
                     return null;
                 }
                 return line;
             }
         } catch(IOException e) {
-            LOGGER.debug("Error while retrieving value for "+key, e);
+            LOGGER.debug("Error while retrieving value for {}", key, e);
             throw e;
         }
     }

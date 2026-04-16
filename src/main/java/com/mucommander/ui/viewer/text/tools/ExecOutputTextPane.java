@@ -211,7 +211,7 @@ class ExecOutputTextPane extends JTextPane {
         if (p == null) {
             return null;
         }
-        int pos = viewToModel(p);
+        int pos = viewToModel2D(p);
         try {
             int start = Utilities.getRowStart(this, pos);
             int end = Utilities.getRowEnd(this, pos);

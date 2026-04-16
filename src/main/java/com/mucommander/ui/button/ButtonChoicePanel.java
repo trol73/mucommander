@@ -67,7 +67,7 @@ public class ButtonChoicePanel extends JPanel implements KeyListener, FocusListe
 	
     /**
      * Creates a new ButtonChoicePanel and lays out the given buttons on a grid
-     * according to the provided number of colums.
+     * according to the provided number of columns.
      *
      * <p>Initial focus will be given to the first button.
      *

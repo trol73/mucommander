@@ -192,12 +192,10 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
      * cell (rowIndex, vColIndex) so that it is visible within the viewport.
  	*/
 	private void scrollToVisible(int rowIndex, int vColIndex) {
-    	if (!(getParent() instanceof JViewport)) {
+    	if (!(getParent() instanceof JViewport viewport)) {
 			return;
 		}
 
-    	JViewport viewport = (JViewport) getParent();
-    
         // This rectangle is relative to the table where the
         // northwest corner of cell (0,0) is always (0,0).
         Rectangle rect = getCellRect(rowIndex, vColIndex, true);
@@ -277,10 +275,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 		data.restoreDefaultAccelerators();
 	}
 	
-	///////////////////////////
-    // FocusListener methods //
-    ///////////////////////////
-	
+	@Override
 	public void focusGained(FocusEvent e) {
 		int currentSelectedRow = getSelectedRow();
 		if (lastSelectedRow != currentSelectedRow)
@@ -290,10 +285,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 
 	public void focusLost(FocusEvent e) { }
 	
-	/////////////////////////////
-	//// KeyListener methods ////
-	/////////////////////////////
-	
+	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		if (keyCode == KeyEvent.VK_ENTER) {
@@ -383,7 +375,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 	}
 	
 	private class KeymapTableModel extends DefaultTableModel {	
-		private ShortcutsTableData tableData;
+		private final ShortcutsTableData tableData;
 
 		private KeymapTableModel(ShortcutsTableData data) {
 			super(data.getTableData(), new String[] {Translator.get("shortcuts_table.action_description"),
@@ -394,15 +386,11 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 
 		@Override
         public boolean isCellEditable(int row, int column) {
-			switch(column) {
-                case ACTION_DESCRIPTION_COLUMN_INDEX:
-                    return false;
-                case ACCELERATOR_COLUMN_INDEX:
-                case ALTERNATE_ACCELERATOR_COLUMN_INDEX:
-                    return true;
-                default:
-                    return false;
-			}
+            return switch (column) {
+                case ACTION_DESCRIPTION_COLUMN_INDEX -> false;
+                case ACCELERATOR_COLUMN_INDEX, ALTERNATE_ACCELERATOR_COLUMN_INDEX -> true;
+                default -> false;
+            };
 		}
 		
 		@Override
@@ -756,19 +744,15 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 				label.setText(text);
 				// set cell's foreground color
 				if (key != null) {
-					boolean customized;
-					switch (columnId) {
-					case ACCELERATOR_COLUMN_INDEX:
-						customized = !key.equals(ActionProperties.getDefaultAccelerator(data.getActionId(rowIndex)));
-						break;
-					case ALTERNATE_ACCELERATOR_COLUMN_INDEX:
-						customized = !key.equals(ActionProperties.getDefaultAlternativeAccelerator(data.getActionId(rowIndex)));
-						break;
-					default:
-						customized = false;
-					}
+					boolean customized = switch (columnId) {
+                        case ACCELERATOR_COLUMN_INDEX ->
+                                !key.equals(ActionProperties.getDefaultAccelerator(data.getActionId(rowIndex)));
+                        case ALTERNATE_ACCELERATOR_COLUMN_INDEX ->
+                                !key.equals(ActionProperties.getDefaultAlternativeAccelerator(data.getActionId(rowIndex)));
+                        default -> false;
+                    };
 
-					label.setForeground(ThemeCache.foregroundColors[ThemeCache.ACTIVE][ThemeCache.NORMAL][customized ? ThemeCache.PLAIN_FILE : ThemeCache.HIDDEN_FILE]);
+                    label.setForeground(ThemeCache.foregroundColors[ThemeCache.ACTIVE][ThemeCache.NORMAL][customized ? ThemeCache.PLAIN_FILE : ThemeCache.HIDDEN_FILE]);
 				}
 			}
 			

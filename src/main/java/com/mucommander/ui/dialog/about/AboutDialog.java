@@ -29,6 +29,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Locale;
 
@@ -469,8 +471,8 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             dispose();
         } else if(e.getSource() == btnHome) {
             try {
-                DesktopManager.browse(new URL(RuntimeConstants.HOMEPAGE_URL));
-            } catch(IOException ignored) {} // Ignores errors here as there really isn't anything we can do.
+                DesktopManager.browse(new URI(RuntimeConstants.HOMEPAGE_URL).toURL());
+            } catch(IOException | URISyntaxException ignored) {} // Ignores errors here as there really isn't anything we can do.
 
         } else if(e.getSource() == btnLicense) {
             new LicenseDialog(this).showDialog();

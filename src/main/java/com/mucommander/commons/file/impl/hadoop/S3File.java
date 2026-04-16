@@ -9,6 +9,7 @@ import org.apache.hadoop.fs.FileSystem;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * {@link HadoopFile} implementation for the Amazon S3 protocol.
@@ -30,10 +31,6 @@ public class S3File extends HadoopFile {
     }
 
 
-    ///////////////////////////////
-    // HadoopFile implementation //
-    ///////////////////////////////
-
     @Override
     protected FileSystem getHadoopFileSystem(FileURL url) throws IOException {
         if(!url.containsCredentials())
@@ -46,7 +43,7 @@ public class S3File extends HadoopFile {
         Credentials creds = url.getCredentials();
         if(creds!=null) {
             // URL-encode secret as it may contain non URL-safe characters ('+' and '/')
-            realm.setCredentials(new Credentials(creds.getLogin(), URLEncoder.encode(creds.getPassword(), "UTF-8")));
+            realm.setCredentials(new Credentials(creds.getLogin(), URLEncoder.encode(creds.getPassword(), StandardCharsets.UTF_8)));
         }
 
         // Change the scheme to the actual Hadoop fileystem (s3 -> s3n)

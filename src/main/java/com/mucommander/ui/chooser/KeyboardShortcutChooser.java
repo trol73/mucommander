@@ -51,7 +51,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
 
     private final String noneString = "<"+Translator.get("none")+">";
 
-    private final static int KEY_CHOICES[] = new int[] {
+    private final static int[] KEY_CHOICES = new int[] {
         KeyEvent.VK_ESCAPE, KeyEvent.VK_TAB, KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE, KeyEvent.VK_ENTER,
         KeyEvent.VK_BACK_QUOTE, KeyEvent.VK_MINUS, KeyEvent.VK_EQUALS, KeyEvent.VK_OPEN_BRACKET, KeyEvent.VK_CLOSE_BRACKET, KeyEvent.VK_BACK_SLASH, KeyEvent.VK_SEMICOLON, KeyEvent.VK_QUOTE, KeyEvent.VK_COMMA, KeyEvent.VK_PERIOD, KeyEvent.VK_SLASH,
         KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
@@ -235,7 +235,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        LOGGER.trace("keyModifiers="+keyEvent.getModifiers()+" keyCode="+keyEvent.getKeyCode());
+        LOGGER.trace("keyModifiers={} keyCode={}", keyEvent.getModifiersEx(), keyEvent.getKeyCode());
 
         int keyCode = keyEvent.getKeyCode();
         if (keyCode==KeyEvent.VK_SHIFT || keyCode==KeyEvent.VK_CONTROL || keyCode==KeyEvent.VK_ALT || keyCode==KeyEvent.VK_META) {
@@ -260,8 +260,8 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
 
 
     private static class KeyChoice {
-        private int keyValue;
-        private String keyLabel;
+        private final int keyValue;
+        private final String keyLabel;
 
         private KeyChoice(int choiceValue, String choiceLabel) {
             this.keyValue = choiceValue;
@@ -290,7 +290,7 @@ public class KeyboardShortcutChooser extends JPanel implements ItemListener, Com
 
 
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         Translator.init();
 
         JFrame frame = new JFrame();

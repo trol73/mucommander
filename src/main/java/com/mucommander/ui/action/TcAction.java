@@ -247,7 +247,7 @@ public abstract class TcAction extends AbstractAction {
         String text = KeyEvent.getKeyText(accelerator.getKeyCode());
         int modifiers = accelerator.getModifiers();
         if (modifiers != 0) {
-            text = KeyEvent.getKeyModifiersText(modifiers) + "+" + text;
+            text = KeyEvent.getModifiersExText(modifiers) + "+" + text;
         }
         return text;
     }

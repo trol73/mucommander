@@ -79,11 +79,9 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
     }
 
     private void paintText(Graphics g) {
-        FontMetrics metrics;
-
         g.setColor(getForeground());
         g.setFont(getFont());
-        metrics = getFontMetrics(getFont());
+        FontMetrics metrics = getFontMetrics(getFont());
         g.drawString(getText(), (getWidth() - metrics.stringWidth(getText())) / 2, (getHeight() - metrics.getHeight()) / 2 + metrics.getAscent());
     }
 
@@ -142,10 +140,7 @@ public class PreviewLabel extends JLabel implements PropertyChangeListener, Clon
         return dimension;
     }
 
-    ///////////////////////////////////////////
-    // PropertyChangeListener implementation //
-    ///////////////////////////////////////////
-
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
         String name = event.getPropertyName();
         Object value = event.getNewValue();

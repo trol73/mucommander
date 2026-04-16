@@ -40,7 +40,7 @@ import com.mucommander.ui.main.MainFrame;
  * value specified in the constructor:
  * <ul>
  *  <li>moveToTrash enabled: files are moved to the trash returned by {@link DesktopManager#getTrash()}.
- *  <li>moveToTrash disabled: files are permanently deleted, i.e deleted files cannot be recovered. In this mode,
+ *  <li>moveToTrash disabled: files are permanently deleted, i.e. deleted files cannot be recovered. In this mode,
  * folders are deleted recursively
  * </ul>
  *

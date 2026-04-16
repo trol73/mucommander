@@ -30,7 +30,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /**
- * AutoCompletionType defines the behaviour of the auto-completion, such as: 
+ * AutoCompletionType defines the behavior of the auto-completion, such as:
  * - The key(s) that will open the popup window
  * - When should the documentListener be attached to the text component
  * - etc..

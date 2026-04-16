@@ -141,7 +141,7 @@ public enum FileType {
         String[] masks = fileMasks.split(",");
         WildcardFileFilter[] result = new WildcardFileFilter[masks.length];
         for (int i = 0; i < masks.length; i++) {
-            result[i] = new WildcardFileFilter(masks[i], IOCase.INSENSITIVE);
+            result[i] = WildcardFileFilter.builder().setWildcards(masks[i]).setIoCase(IOCase.INSENSITIVE).get();
         }
         return result;
     }

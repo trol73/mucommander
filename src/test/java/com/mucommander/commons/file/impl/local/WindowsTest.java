@@ -64,8 +64,10 @@ public class WindowsTest {
 
         start = System.currentTimeMillis();
         try {
-            Process theProcess = Runtime.getRuntime().exec("cmd /c wmic logicaldisk get caption");
-            BufferedReader inStream = new BufferedReader(new InputStreamReader(theProcess.getInputStream()));
+            ProcessBuilder pb = new ProcessBuilder("cmd /c wmic logicaldisk get caption".split(" "));
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            BufferedReader inStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = inStream.readLine()) != null) {
                 log.info(line);

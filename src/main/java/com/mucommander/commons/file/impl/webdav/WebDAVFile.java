@@ -94,7 +94,7 @@ public class WebDAVFile extends ProtocolFile {
     public boolean exists() {
         List<DavResource> resources;
         try {
-            resources = sardine.getResources(PATH.toString());
+            resources = sardine.list(PATH.toString());
         } catch (IOException ex) {
             Logger.getLogger(WebDAVFile.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -141,7 +141,7 @@ public class WebDAVFile extends ProtocolFile {
     public boolean isDirectory() {
         List<DavResource> resources;
         try {
-            resources = sardine.getResources(PATH.toString());
+            resources = sardine.list(PATH.toString());
         } catch (IOException ex) {
             Logger.getLogger(WebDAVFile.class.getName()).log(Level.SEVERE, null, ex);
             return true;
@@ -160,7 +160,7 @@ public class WebDAVFile extends ProtocolFile {
 
         List<DavResource> files;
         try {
-            files = sardine.getResources(PATH.toString());
+            files = sardine.list(PATH.toString());
         } catch (SardineException e) {
             return new AbstractFile[]{};
         }

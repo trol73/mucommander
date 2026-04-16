@@ -71,9 +71,9 @@ public class GlobalLocationHistory extends LocationAdapter {
 			try {
 				history.add(FileURL.getFileURL(filePath));
 			} catch (MalformedURLException e) {
-				LOGGER.debug("Got invalid URL from the snapshot file: " + filePath, e);
+				LOGGER.debug("Got invalid URL from the snapshot file: {}", filePath, e);
 			} catch (Throwable t) {
-				LOGGER.debug("Can't process URL from the snapshot file: " + filePath, t);
+				LOGGER.debug("Can't process URL from the snapshot file: {}", filePath, t);
 			}
     	}
 	}

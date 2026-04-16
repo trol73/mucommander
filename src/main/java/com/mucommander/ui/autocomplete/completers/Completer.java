@@ -24,9 +24,7 @@ import com.mucommander.ui.autocomplete.completers.services.CompletionService;
 
 import javax.swing.*;
 import java.net.MalformedURLException;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Interface that each type of completion must implement.
@@ -40,7 +38,7 @@ import java.util.Vector;
  */
 
 public abstract class Completer {
-	private Set<CompletionService> services = new LinkedHashSet<>();
+	private final Set<CompletionService> services = new LinkedHashSet<>();
 
 	
 	/**
@@ -50,7 +48,7 @@ public abstract class Completer {
 	 * @param component - an AutocompleterTextComponent.
 	 * @return Vector of suggestions for completion.
 	 */
-	protected abstract Vector<String> getUpdatedSuggestions(AutocompleterTextComponent component);
+	protected abstract List<String> getUpdatedSuggestions(AutocompleterTextComponent component);
     
 	/**
 	 * update list model depending on the data in text component
@@ -60,13 +58,13 @@ public abstract class Completer {
 	 * @return true if an auto-completion popup with the updated list should be shown, false otherwise.
 	 */
     public boolean updateListData(final JList<String> list, AutocompleterTextComponent comp) {
-    	list.setListData(getUpdatedSuggestions(comp));
+    	list.setListData(getUpdatedSuggestions(comp).toArray(String[]::new));
 
     	if (list.getModel().getSize() == 1) {
     		try {
 				String typedFilename = FileURL.getFileURL(comp.getText()).getFilename();
 
-				// in case the suggestions-list contains only one suggestion and it 
+				// in case the suggestions-list contains only one suggestion, and it
 				// match the typed path - do not show an auto-completion popup.
 				if (typedFilename == null || typedFilename.equalsIgnoreCase(list.getModel().getElementAt(0)))
 					return false;

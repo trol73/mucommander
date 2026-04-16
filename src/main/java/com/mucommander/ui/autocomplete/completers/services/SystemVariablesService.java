@@ -18,39 +18,36 @@
 
 package com.mucommander.ui.autocomplete.completers.services;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * This <code>CompletionService</code> handles system variables completion.
- * 
+ *
  * @author Arik Hadas
  */
 
 public class SystemVariablesService implements CompletionService {
-	private String[] cachedKeyNames;
-	
-	public SystemVariablesService() {
-		Set<String> keys = System.getenv().keySet();
-		int nbKeys = keys.size();
-		cachedKeyNames = new String[nbKeys];
-		Iterator<String> iter = keys.iterator();
-		for (int i=0; i<nbKeys; i++)
-			cachedKeyNames[i] = "$" + iter.next();
-		Arrays.sort(cachedKeyNames, String.CASE_INSENSITIVE_ORDER);		
-	}
+    private final String[] cachedKeyNames;
 
-	public Vector<String> getPossibleCompletions(String path) {
-		return PrefixFilter.createPrefixFilter(path).filter(cachedKeyNames);
-	}
+    public SystemVariablesService() {
+        Set<String> keys = System.getenv().keySet();
+        int nbKeys = keys.size();
+        cachedKeyNames = new String[nbKeys];
+        Iterator<String> iter = keys.iterator();
+        for (int i = 0; i < nbKeys; i++)
+            cachedKeyNames[i] = "$" + iter.next();
+        Arrays.sort(cachedKeyNames, String.CASE_INSENSITIVE_ORDER);
+    }
 
-	public String complete(String selectedCompletion) {
-		for (String cachedKeyName : cachedKeyNames)
-			if (cachedKeyName.equalsIgnoreCase(selectedCompletion)) {
-				return cachedKeyName;
-			}
-		return null;
-	}
+    public List<String> getPossibleCompletions(String path) {
+        return PrefixFilter.createPrefixFilter(path).filter(cachedKeyNames);
+    }
+
+    public String complete(String selectedCompletion) {
+        for (String cachedKeyName : cachedKeyNames)
+            if (cachedKeyName.equalsIgnoreCase(selectedCompletion)) {
+                return cachedKeyName;
+            }
+        return null;
+    }
 }

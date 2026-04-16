@@ -28,7 +28,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AutocompleterTextComponent convert any text component to auto-completion supported text component. 
@@ -96,7 +97,10 @@ public abstract class AutocompleterTextComponent {
 	
 	public int getHeight() { return textComponent.getHeight(); }
 	
-	Rectangle modelToView() throws BadLocationException { return textComponent.getUI().modelToView(textComponent, textComponent.getCaretPosition()); }
+	Rectangle modelToView() throws BadLocationException {
+		int pos = textComponent.getCaretPosition();
+		return textComponent.modelToView2D(pos).getBounds();
+	}
 
 	void moveCaretToEndOfText() { textComponent.setCaretPosition(textComponent.getText().length()); }
 	
@@ -114,14 +118,13 @@ public abstract class AutocompleterTextComponent {
 	/**
 	 * 	getItemsNames
 	 * 
-	 * @return empty Vector if component is not an EditableComboBox,
-	 *  otherwise return Vector which contains the names of the combobox items.
+	 * @return empty Vector if component is not an EditableComboBox, otherwise return Vector which contains the names of the combobox items.
 	 */
-	public Vector<String> getItemNames() {
-		Vector<String> result = new Vector<>();
+	public List<String> getItemNames() {
+		List<String> result = new ArrayList<>();
 		if (editableComboBox != null) {
 			int nbItems = editableComboBox.getItemCount();
-			for (int i=0; i < nbItems; i++) {
+			for (int i = 0; i < nbItems; i++) {
 				result.add(editableComboBox.getItemAt(i).toString());
 			}
 		}
@@ -131,15 +134,14 @@ public abstract class AutocompleterTextComponent {
 	/**
 	 * isPopupVisible
 	 * 
-	 * @return false if component is not an EditableComboBox,
-	 * 	otherwise, true if the combo-box list of items is visible.
+	 * @return false if component is not an EditableComboBox, otherwise, true if the combo-box list of items is visible.
 	 */
 	public boolean isComponentsPopupVisible() {
 		return editableComboBox != null && editableComboBox.isPopupVisible();
 	}
 	
 	/**
-	 * setPopupUnvisibe - make the combo-box list of items unvisible.
+	 * setPopupUnvisibe - make the combo-box list of items invisible.
 	 */
 	void setComponentsPopupInvisible() {
 		if (editableComboBox != null) {

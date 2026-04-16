@@ -18,6 +18,9 @@
 
 package com.mucommander.commons.file.impl.zip.provider;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Calendar;
 import java.util.Vector;
 
@@ -34,16 +37,35 @@ import java.util.Vector;
  */
 public class ZipEntry implements Cloneable {
 
-    /** Name/path of this entry */
+    /** Name/path of this entry
+     * -- GETTER --
+     *  Returns the name of this entry.
+     *
+     * @return the name of this entry
+     */
+    @Getter
     protected String name;
 
-    /** Uncompressed size of the entry data */
+    /** Uncompressed size of the entry data
+     * -- GETTER --
+     *  Returns the uncompressed size of the entry data, or <code>-1</code> if not known.
+     */
+    @Getter
     protected long size = -1;
 
-    /** Compressed size of the entry data */
+    /** Compressed size of the entry data
+     * -- GETTER --
+     *  Returns the size of the compressed entry data, or <code>-1</code> if not known. In the case of a stored entry,
+     *  the compressed size will be the same as the uncompressed size of the entry.
+     */
+    @Getter
     private long compressedSize = -1;
 
-    /** CRC-32 checksum of the uncompressed entry data */
+    /** CRC-32 checksum of the uncompressed entry data
+     * -- GETTER --
+     *  Returns the CRC-32 checksum of the uncompressed entry data, or <code>-1</code> if not known.
+     */
+    @Getter
     protected long crc = -1;
 
     /** Data/time of this entry, in the DOS time format */
@@ -52,19 +74,47 @@ public class ZipEntry implements Cloneable {
     /** Data/time of this entry, in the Java time format */
     private long javaTime = -1;
 
-    /** Compression method that was used for the entry data */
+    /** Compression method that was used for the entry data
+     * -- GETTER --
+     *  Returns the compression method of the entry, or <code>-1</code> if not specified.
+     */
+    @Getter
     protected int method = -1;
 
-    /** An optional comment for this entry */
+    /** An optional comment for this entry
+     * -- GETTER --
+     *  Returns the comment string for the entry, or <code>null</code> if there is none.
+     */
+    @Getter
     protected String comment;
 
-    /** Platform, part of the 'version made by' central directory field */
+    /** Platform, part of the 'version made by' central directory field
+     * -- GETTER --
+     *  Returns the platform specification to put into the 'version made by' part of the central file header.
+     * {@link #PLATFORM_FAT} unless {@link #setUnixMode setUnixMode} has been called,
+     * in which case {@link #PLATFORM_UNIX} will be returned.
+     */
+    @Getter
     protected int platform = PLATFORM_FAT;
 
-    /** Internal attributes (2 bytes) */
+    /** Internal attributes (2 bytes)
+     * -- GETTER --
+     *  Retrieves the internal file attributes.
+     * -- SETTER --
+     *  Sets the internal file attributes.
+     */
+    @Setter
+    @Getter
     private int internalAttributes = 0;
 
-    /** External attributes (4 bytes) */
+    /** External attributes (4 bytes)
+     * -- GETTER --
+     *  Retrieves the external file attributes.
+     * -- SETTER --
+     *  Sets the external file attributes.
+     */
+    @Setter
+    @Getter
     private long externalAttributes = 0;
 
     /** List of extra fields, as ZipEntraField instances */
@@ -135,42 +185,6 @@ public class ZipEntry implements Cloneable {
     }
 
     /**
-     * Retrieves the internal file attributes.
-     *
-     * @return the internal file attributes
-     */
-    public int getInternalAttributes() {
-        return internalAttributes;
-    }
-
-    /**
-     * Sets the internal file attributes.
-     *
-     * @param value an <code>int</code> value
-     */
-    public void setInternalAttributes(int value) {
-        internalAttributes = value;
-    }
-
-    /**
-     * Retrieves the external file attributes.
-     *
-     * @return the external file attributes
-     */
-    public long getExternalAttributes() {
-        return externalAttributes;
-    }
-
-    /**
-     * Sets the external file attributes.
-     *
-     * @param value an <code>long</code> value
-     */
-    public void setExternalAttributes(long value) {
-        externalAttributes = value;
-    }
-
-    /**
      * Sets Unix permissions in a way that is understood by Info-Zip's unzip command.
      *
      * @param mode an <code>int</code> value
@@ -208,16 +222,6 @@ public class ZipEntry implements Cloneable {
      */
     public boolean hasUnixMode() {
         return getPlatform()==PLATFORM_UNIX;
-    }
-
-    /**
-     * Returns the platform specification to put into the 'version made by' part of the central file header.
-     *
-     * @return {@link #PLATFORM_FAT} unless {@link #setUnixMode setUnixMode} has been called,
-     * in which case {@link #PLATFORM_UNIX} will be returned.
-     */
-    public int getPlatform() {
-        return platform;
     }
 
     /**
@@ -319,15 +323,6 @@ public class ZipEntry implements Cloneable {
     }
 
     /**
-     * Returns the name of this entry.
-     *
-     * @return the name of this entry
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Sets the name of this entry.
      *
      * @param name the new name for this entry
@@ -365,15 +360,6 @@ public class ZipEntry implements Cloneable {
     }
 
     /**
-     * Returns the uncompressed size of the entry data, or <code>-1</code> if not known.
-     *
-     * @return the uncompressed size of the entry data, or <code>-1</code> if not known
-     */
-    public long getSize() {
-        return size;
-    }
-
-    /**
      * Sets the uncompressed size of the entry data.
      *
      * @param size the uncompressed size in bytes
@@ -388,16 +374,6 @@ public class ZipEntry implements Cloneable {
     }
 
     /**
-     * Returns the size of the compressed entry data, or <code>-1</code> if not known. In the case of a stored entry,
-     * the compressed size will be the same as the uncompressed size of the entry.
-     *
-     * @return the size of the compressed entry data, or <code>-1</code> if not known
-     */
-    public long getCompressedSize() {
-        return compressedSize;
-    }
-
-    /**
      * Sets the size of the compressed entry data.
      *
      * @param csize the compressed size to set to
@@ -408,15 +384,6 @@ public class ZipEntry implements Cloneable {
         }
 
         this.compressedSize = csize;
-    }
-
-    /**
-     * Returns the CRC-32 checksum of the uncompressed entry data, or <code>-1</code> if not known.
-     *
-     * @return the CRC-32 checksum of the uncompressed entry data, or <code>-1</code> if not known
-     */
-    public long getCrc() {
-        return crc;
     }
 
     /**
@@ -474,15 +441,6 @@ public class ZipEntry implements Cloneable {
     }
 
     /**
-     * Returns the compression method of the entry, or <code>-1</code> if not specified.
-     *
-     * @return the compression method of the entry, or <code>-1</code> if not specified
-     */
-    public int getMethod() {
-    	return method;
-    }
-
-    /**
      * Sets the compression method for the entry.
      *
      * @param method the compression method, either {@link ZipConstants#STORED} or {@link ZipConstants#DEFLATED}
@@ -494,15 +452,6 @@ public class ZipEntry implements Cloneable {
         }
 
         this.method = method;
-    }
-
-    /**
-     * Returns the comment string for the entry, or <code>null</code> if there is none.
-     *
-     * @return the comment string for the entry, or <code>null</code> if there is none
-     */
-    public String getComment() {
-    	return comment;
     }
 
     /**
@@ -536,10 +485,6 @@ public class ZipEntry implements Cloneable {
         }
     }
 
-
-    ////////////////////
-    // Helper methods //
-    ////////////////////
 
     /*
      * Converts DOS time (Epoch=1980) to Java time (Epoch=1970).
@@ -613,10 +558,6 @@ public class ZipEntry implements Cloneable {
         return l>=0 && l<=0xFFFFFFFFL;
     }
 
-
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
 
     /**
      * Returns a cloned instance of this entry.

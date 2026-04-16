@@ -345,7 +345,7 @@ public interface Kernel32API extends StdCallLibrary {
     	public char[] cAlternateFileName = new char[14];
 
         @Override
-        protected List getFieldOrder() {
+        protected List<String> getFieldOrder() {
             return Arrays.asList("dwFileAttributes", "ftCreationTime", "ftLastAccessTime", "ftLastWriteTime", "nFileSizeHigh",
                     "nFileSizeLow", "dwReserved0", "dwReserved1", "cFileName", "cAlternateFileName");
         }

@@ -70,18 +70,17 @@ public class ExtraFieldUtils {
     }
 
     /**
-     * create an instance of the approriate ExtraField, falls back to
+     * create an instance of the appropriate ExtraField, falls back to
      * {@link UnrecognizedExtraField UnrecognizedExtraField}.
      * @param headerId the header identifier
-     * @return an instance of the appropiate ExtraField
+     * @return an instance of the appropriate ExtraField
      * @exception InstantiationException if unable to instantiate the class
-     * @exception IllegalAccessException if not allowed to instatiate the class
+     * @exception IllegalAccessException if not allowed to instantiate the class
      */
-    public static ZipExtraField createExtraField(ZipShort headerId)
-        throws InstantiationException, IllegalAccessException {
+    public static ZipExtraField createExtraField(ZipShort headerId) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Class<? extends ZipExtraField> c = implementations.get(headerId);
         if (c != null) {
-            return c.newInstance();
+            return c.getDeclaredConstructor().newInstance();
         }
         UnrecognizedExtraField u = new UnrecognizedExtraField();
         u.setHeaderId(headerId);
@@ -102,23 +101,21 @@ public class ExtraFieldUtils {
             ZipShort headerId = new ZipShort(data, start);
             int length = (new ZipShort(data, start + 2)).getValue();
             if (start + 4 + length > data.length) {
-                throw new ZipException("data starting at " + start
-                    + " is in unknown format");
+                throw new ZipException("data starting at " + start+ " is in unknown format");
             }
             try {
                 ZipExtraField ze = createExtraField(headerId);
                 ze.parseFromLocalFileData(data, start + 4, length);
                 v.add(ze);
-            } catch (InstantiationException | IllegalAccessException ie) {
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ie) {
                 throw new ZipException(ie.getMessage());
             }
             start += (length + 4);
         }
         if (start != data.length) { // array not exhausted
-            throw new ZipException("data starting at " + start
-                + " is in unknown format");
+            throw new ZipException("data starting at " + start + " is in unknown format");
         }
-        return v.toArray(new ZipExtraField[v.size()]);
+        return v.toArray(new ZipExtraField[0]);
     }
 
     /**

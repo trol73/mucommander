@@ -104,11 +104,10 @@ public class FileDragSourceListener implements DragGestureListener, DragSourceLi
         BaseFileTableModel tableModel = fileTable.getFileTableModel();
 
         // Return (do not initiate drag) if mouse button2 or button3 was used
-        if ((event.getTriggerEvent().getModifiers() & (InputEvent.BUTTON2_MASK|InputEvent.BUTTON3_MASK)) != 0)
+        if ((event.getTriggerEvent().getModifiersEx() & (InputEvent.BUTTON2_DOWN_MASK|InputEvent.BUTTON3_DOWN_MASK)) != 0)
             return;
 
-// Do not use that to retrieve the current selected file as it is inaccurate: the selection could have changed since the
-// the mouse was clicked.         
+// Do not use that to retrieve the current selected file as it is inaccurate: the selection could have changed since the mouse was clicked.
 //        AbstractFile selectedFile = fileTable.getSelectedFile(false);
 //        // Return if selected file is null (could happen if '..' is selected)
 //        if(selectedFile==null)

@@ -115,7 +115,7 @@ class SFTPConnectionHandler extends ConnectionHandler {
                     pk.setPrivateKey(pair.getPrivateKey());
                     pk.setPublicKey(pair.getPublicKey());
                 } catch (IOException | InvalidPassphraseException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Keys error", e);
                     privateKeyPath = null;  // try to authorize via password on error
 //                    throwAuthException("Invalid private key file or passphrase");  // Todo: localize this entry
 //                } catch (IOException e) {
@@ -206,7 +206,6 @@ class SFTPConnectionHandler extends ConnectionHandler {
             LOGGER.info("authentication complete, authResult={}", authResult);
         } catch(AuthException e) {
             LOGGER.info("Caught exception while authenticating", e);
-            e.printStackTrace();
             throw  e;//throwAuthException(e.getMessage());
         }
     }

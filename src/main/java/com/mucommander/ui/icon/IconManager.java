@@ -22,6 +22,8 @@ package com.mucommander.ui.icon;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
@@ -29,8 +31,8 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import com.mucommander.commons.file.util.ResourceLoader;
 import ru.trolsoft.macosx.RetinaImageIcon;
@@ -40,9 +42,8 @@ import ru.trolsoft.macosx.RetinaImageIcon;
  *
  * @author Maxence Bernard
  */
+@Slf4j
 public class IconManager {
-	private static final Logger LOGGER = LoggerFactory.getLogger(IconManager.class);
-
     public enum IconSet {
         /** Designates the file icon set */
         FILE("file"),
@@ -66,7 +67,12 @@ public class IconManager {
         /** Base folder of all images */
         private final static String BASE_IMAGE_FOLDER = "/images/";
 
-        /** Icon sets folders within the application's JAR file */
+        /** Icon sets folders within the application's JAR file
+         * -- GETTER --
+         *  Returns the path to the folder that contains the image resource files of the given icon set.
+         *  The returned path is relative to the application JAR file's root and contains a trailing slash.
+         */
+        @Getter
         private final String folder;
 
         /** Caches for the different icon sets */
@@ -76,19 +82,9 @@ public class IconManager {
             this.folder = BASE_IMAGE_FOLDER + folder + '/';
         }
 
-        /**
-         * Returns the path to the folder that contains the image resource files of the given icon set.
-         * The returned path is relative to the application JAR file's root and contains a trailing slash.
-         */
-        public String getFolder() {
-            return folder;
-        }
-
         private Map<String, ImageIcon> getCache() {
             return cache;
         }
-
-
     }
 
     /**
@@ -106,7 +102,7 @@ public class IconManager {
     public static ImageIcon getIcon(String iconPath, float scaleFactor) {
         URL resourceURL = ResourceLoader.getResourceAsURL(iconPath);
         if (resourceURL == null) {
-            LOGGER.debug("Warning: attempt to load non-existing icon: " + iconPath + " , icon missing ?");
+            log.debug("Warning: attempt to load non-existing icon: " + iconPath + " , icon missing ?");
             return null;
         }
         ImageIcon icon;
@@ -126,9 +122,9 @@ public class IconManager {
         String path = url.toString();
         if (path.endsWith(".png") && !path.contains("@")) {
             try {
-                return new URL(path.replace(".png", "@2x.png"));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+                return new URI(path.replace(".png", "@2x.png")).toURL();
+            } catch (MalformedURLException | URISyntaxException e) {
+                log.error("getRetinaUrl error", e);
             }
         }
         return url;
@@ -196,29 +192,8 @@ public class IconManager {
      * <code>null</code> if the image wasn't found or couldn't be loaded
      */
     public static ImageIcon getIcon(IconSet iconSet, String iconName, float scaleFactor) {
-        Map<String, ImageIcon> cache = iconSet.getCache();
-        ImageIcon icon;
-
-        if (cache == null) {
-            // No caching, simply create the icon
-            icon = getIcon(iconSet.getFolder() + iconName);
-        } else {
-            // Look for the icon in the cache
-            icon = cache.get(iconName);
-            if (icon == null) {
-                // Icon is not in the cache, let's create it
-                icon = getIcon(iconSet.getFolder()+iconName);
-                // and add it to the cache if icon exists
-                if (icon != null) {
-                    cache.put(iconName, icon);
-                }
-            }
-        }
-
-        if (icon == null) {
-            return null;
-        }
-        return scaleFactor == 1.0f ? icon : getScaledIcon(icon, scaleFactor);
+        ImageIcon icon = getIcon(iconSet, iconName);
+        return icon == null || scaleFactor == 1.0f ? icon : getScaledIcon(icon, scaleFactor);
     }
 
 
@@ -227,7 +202,23 @@ public class IconManager {
      * with a scale factor of 1.0f (no rescaling).
      */
     public static ImageIcon getIcon(IconSet iconSet, String iconName) {
-        return getIcon(iconSet, iconName, 1.0f);
+        Map<String, ImageIcon> cache = iconSet.getCache();
+        if (cache == null) {
+            // No caching, simply create the icon
+            return getIcon(iconSet.getFolder() + iconName);
+        }
+        // Look for the icon in the cache
+        ImageIcon icon = cache.get(iconName);
+        if (icon == null) {
+            // Icon is not in the cache, let's create it
+            icon = getIcon(iconSet.getFolder()+iconName);
+            // and add it to the cache if icon exists
+            if (icon != null) {
+                cache.put(iconName, icon);
+            }
+        }
+
+        return icon;
     }
 
 

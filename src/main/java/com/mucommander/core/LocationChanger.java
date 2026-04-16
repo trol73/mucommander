@@ -455,11 +455,7 @@ public class LocationChanger {
 		// No volume could be found, return null
 		return null;
 	}
-
-	////////////////////////////////////
-	// ChangeFolderThread inner class //
-	////////////////////////////////////
-
+	
 	/**
 	 * This thread takes care of changing current folder without locking the main
 	 * thread. The folder change can be cancelled.

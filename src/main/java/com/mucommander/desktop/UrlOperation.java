@@ -23,6 +23,8 @@ import com.mucommander.commons.file.impl.http.HTTPFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -78,7 +80,7 @@ public abstract class UrlOperation implements DesktopOperation {
      * By default, this method will call {@link #extractTarget(Object[])} on the specified parameters
      * and pass the resulting <code>java.net.URL</code> instance to {@link #canExecute(URL)}.
      * <p>
-     * This behaviour can be overriden by implementations, although most cases can be handled through
+     * This behavior can be overridden by implementations, although most cases can be handled through
      * {@link #canExecute(URL)} instead.
      *
      * @param  target operation parameters.
@@ -124,7 +126,7 @@ public abstract class UrlOperation implements DesktopOperation {
      *   <li>contains an instance of either <code>java.io.File</code>,{@link com.mucommander.commons.file.impl.local.LocalFile} or <code>String</code>.</li>
      * </ul>
      * <p>
-     * This behaviour can be overridden by implementations to fit their own needs, although it's probably not a great idea.
+     * This behavior can be overridden by implementations to fit their own needs, although it's probably not a great idea.
      *
      * @param  target operation parameters.
      * @return        <code>null</code> if the parameters are not legal, a <code>java.io.File</code> instance instead.
@@ -149,8 +151,8 @@ public abstract class UrlOperation implements DesktopOperation {
         // Deals with instances of String.
         if (obj instanceof String) {
             try {
-                return new URL((String)obj);
-            } catch(MalformedURLException e) {
+                return new URI((String)obj).toURL();
+            } catch(URISyntaxException | MalformedURLException e) {
                 return null;
             }
         }

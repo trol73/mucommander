@@ -46,19 +46,19 @@ public class ArchiveJob extends TransferFileJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArchiveJob.class);
 	
     /** Destination archive file */
-    private AbstractFile destFile;
+    private final AbstractFile destFile;
 
     /** Base destination folder's path */
-    private String baseFolderPath;
+    private final String baseFolderPath;
 
     /** Archiver instance that does the actual archiving */
     private Archiver archiver;
 
     /** Archive format */
-    private ArchiveFormat archiveFormat;
+    private final ArchiveFormat archiveFormat;
 	
     /** Optional archive comment */
-    private String archiveComment;
+    private final String archiveComment;
 	
     /** Lock to avoid Archiver.close() to be called while data is being written */
     private final Object ioLock = new Object();
@@ -83,11 +83,6 @@ public class ArchiveJob extends TransferFileJob {
         scanDirectoryThread.start();
     }
 
-
-    ////////////////////////////////////
-    // TransferFileJob implementation //
-    ////////////////////////////////////
-
     @Override
     protected boolean processFile(AbstractFile file, Object recurseParams) {
         if (getState() == State.INTERRUPTED) {
@@ -105,7 +100,7 @@ public class ArchiveJob extends TransferFileJob {
                     archiver.createEntry(entryRelativePath, file);
 
                     // Recurse on files
-                    AbstractFile subFiles[] = file.ls();
+                    AbstractFile[] subFiles = file.ls();
                     boolean folderComplete = true;
                     for (int i=0; i<subFiles.length && getState() != State.INTERRUPTED; i++) {
                         // Notify job that we're starting to process this file (needed for recursive calls to processFile)
@@ -128,7 +123,6 @@ public class ArchiveJob extends TransferFileJob {
                     return true;
                 }
             } catch (Exception e) {  // Catch Exception rather than IOException as ZipOutputStream has been seen throwing NullPointerException
-                e.printStackTrace();
                 // If job was interrupted by the user at the time when the exception occurred,
                 // it most likely means that the exception was caused by user cancellation.
                 // In this case, the exception should not be interpreted as an error.

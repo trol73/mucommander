@@ -96,10 +96,6 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
     }
 
 
-    /////////////////////////////////////
-    // AbstractNotifier implementation //
-    /////////////////////////////////////
-
     @Override
     public boolean setEnabled(boolean enabled) {
         if (enabled) {
@@ -177,11 +173,10 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
 
     @Override
     public boolean displayNotification(NotificationType notificationType, String title, String description) {
-        LOGGER.debug("notificationType="+notificationType+" title="+title+" description="+description);
+        LOGGER.debug("notificationType={} title={} description={}", notificationType, title, description);
 
         if (!isEnabled()) {
             LOGGER.debug("Ignoring notification, this notifier is not enabled");
-
             return false;
         }
 
@@ -200,19 +195,5 @@ public class SystemTrayNotifier extends AbstractNotifier implements ActionListen
         LOGGER.trace("caught SystemTray ActionEvent");
 
         WindowManager.getCurrentMainFrame().toFront();
-    }
-
-
-    @Override
-    protected void finalize() throws Throwable {
-        // This ensures that the system tray icon is removed when the application terminates.
-        // Even though this is a bit of a shot in the dark, this may fix a problem reported under Linux where the
-        // tray icon stayed after the application had quit:
-        /// http://www.mucommander.com/forums/viewtopic.php?t=604
-        if (isEnabled()) {
-            setEnabled(false);
-        }
-
-        super.finalize();
     }
 }

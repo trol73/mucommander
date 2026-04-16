@@ -26,6 +26,7 @@ import com.mucommander.ui.action.ActionKeymapIO;
 import com.mucommander.ui.main.commandbar.CommandBarIO;
 import com.mucommander.ui.main.toolbar.ToolBarIO;
 import com.mucommander.ui.main.tree.TreeIOThreadManager;
+import com.mucommander.ui.notifier.AbstractNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -152,7 +153,11 @@ public class ShutdownHook extends Thread {
         } catch(Exception e) {
             getLogger().warn("Failed to save toolbar", e);
         }
-        
+
+        var notifier = AbstractNotifier.getNotifier();
+        if (notifier.isEnabled()) {
+            notifier.setEnabled(false);
+        }
 
         // Shutdown tasks should only be performed once
         shutdownTasksPerformed = true;

@@ -21,6 +21,7 @@ package com.mucommander.ui.main;
 import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -93,7 +94,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             try {
                 installLookAndFeel(plaf);
             } catch(Throwable e) {
-                getLogger().info("Failed to install Look&Feel "+plaf, e);
+                getLogger().info("Failed to install Look&Feel {}", plaf, e);
             }
         }
     }
@@ -218,7 +219,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         // Dispose all other frames (viewers, editors...)
         for (Frame frame : Frame.getFrames()) {
             if (frame.isShowing()) {
-                getLogger().debug("disposing frame " + frame.getTitle());
+                getLogger().debug("disposing frame {}", frame.getTitle());
                 frame.dispose();
             }
         }
@@ -257,8 +258,8 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         mainFrame.toFront();
     }
 
-    public static void installLookAndFeel(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        LookAndFeel plaf = (LookAndFeel)Class.forName(className, true, ExtensionManager.getClassLoader()).newInstance();
+    public static void installLookAndFeel(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        LookAndFeel plaf = (LookAndFeel)Class.forName(className, true, ExtensionManager.getClassLoader()).getEnclosingConstructor().newInstance();
         if (plaf.isSupportedLookAndFeel()) {
             UIManager.installLookAndFeel(plaf.getName(), plaf.getClass().getName());
         }
@@ -272,13 +273,13 @@ public class WindowManager implements WindowListener, ConfigurationListener {
     private static void setLookAndFeel(String lnfName) {
         try {
             // Initializes class loading.
-            // This is necessary due to Swing's UIDefaults.LazyProxyValue behaviour that just
+            // This is necessary due to Swing's UIDefaults.LazyProxyValue behavior that just
             // won't use the right ClassLoader instance to load resources.
             Thread currentThread = Thread.currentThread();
             ClassLoader oldLoader = currentThread.getContextClassLoader();
             currentThread.setContextClassLoader(ExtensionManager.getClassLoader());
 
-            UIManager.setLookAndFeel((LookAndFeel)Class.forName(lnfName, true, ExtensionManager.getClassLoader()).newInstance());
+            UIManager.setLookAndFeel((LookAndFeel)Class.forName(lnfName, true, ExtensionManager.getClassLoader()).getEnclosingConstructor().newInstance());
 
             // Restores the contextual ClassLoader.
             currentThread.setContextClassLoader(oldLoader);
@@ -316,7 +317,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
 
         // Workaround for JRE bug #4841881 (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4841881) /
         // which causes Alt+Tab to focus the menu bar under certain L&F.
-        // This bug has also been reported as muCommmander bug #89.
+        // This bug has also been reported as trolCommmander bug #89.
         MenuSelectionManager.defaultManager().clearSelectedPath();
 
         // Return if event doesn't originate from a MainFrame (e.g. ViewerFrame or EditorFrame)

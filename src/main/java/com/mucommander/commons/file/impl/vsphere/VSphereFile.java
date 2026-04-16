@@ -561,10 +561,10 @@ public class VSphereFile extends ProtocolFile implements ConnectionHandlerFactor
 					connHandler.getClient().getServer());
 
 			// http://stackoverflow.com/questions/921262/how-to-download-and-save-a-file-from-internet-using-java
-			URL website = new URL(fileDlUrl);
+			URL website = new URI(fileDlUrl).toURL();
 			return website.openStream();
 
-		} catch (InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | FileFaultFaultMsg | TaskInProgressFaultMsg | InvalidStateFaultMsg e) {
+		} catch (URISyntaxException | InvalidPropertyFaultMsg | RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | FileFaultFaultMsg | TaskInProgressFaultMsg | InvalidStateFaultMsg e) {
 			translateandLogException(e);
 		} finally {
 			releaseConnHandler(connHandler);
@@ -614,7 +614,6 @@ public class VSphereFile extends ProtocolFile implements ConnectionHandlerFactor
 
 	/**
 	 * vSphere APIs require the file size when copying a file.
-	 * 
 	 * mucommander enables file copy with known size, and also with unknown
 	 * size. This class supports the unknown size use case. It saves all the
 	 * data to a temp file and copies it on close, when its size is known.
@@ -622,10 +621,10 @@ public class VSphereFile extends ProtocolFile implements ConnectionHandlerFactor
 	 */
 	public class VSphereOutputStream extends FileOutputStream {
 
-		private ManagedObjectReference fileManager;
+		private final ManagedObjectReference fileManager;
 		private VsphereConnHandler connHandler;
-		private String fileName;
-		private File tmpFile;
+		private final String fileName;
+		private final File tmpFile;
 
 		public VSphereOutputStream(VsphereConnHandler connHandler,
 				ManagedObjectReference fileManager, ManagedObjectReference vm,
@@ -674,7 +673,7 @@ public class VSphereFile extends ProtocolFile implements ConnectionHandlerFactor
 			parseResponse(conn);
 
 		} catch (RuntimeFaultFaultMsg | GuestOperationsFaultFaultMsg | FileFaultFaultMsg
-				| TaskInProgressFaultMsg | InvalidStateFaultMsg e) {
+				| TaskInProgressFaultMsg | InvalidStateFaultMsg | URISyntaxException e) {
 			translateandLogException(e);
 		}
 
@@ -702,10 +701,10 @@ public class VSphereFile extends ProtocolFile implements ConnectionHandlerFactor
 	}
 
 	private URLConnection prepareConnection(String fileUploadUrl, long fileSize)
-			throws TaskInProgressFaultMsg, IOException {
+            throws TaskInProgressFaultMsg, IOException, URISyntaxException {
 
 		// http://stackoverflow.com/questions/3386832/upload-a-file-using-http-put-in-java
-		URL url = new URL(fileUploadUrl);
+		URL url = new URI(fileUploadUrl).toURL();
 		URLConnection conn = url.openConnection();
 		conn.setDoInput(true);
 		conn.setDoOutput(true);

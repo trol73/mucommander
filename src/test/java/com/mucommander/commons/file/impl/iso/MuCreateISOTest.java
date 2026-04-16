@@ -9,7 +9,6 @@ import com.github.stephenc.javaisotools.iso9660.impl.ISOImageFileHandler;
 import com.github.stephenc.javaisotools.joliet.impl.JolietConfig;
 import com.github.stephenc.javaisotools.rockridge.impl.RockRidgeConfig;
 import com.github.stephenc.javaisotools.sabre.HandlerException;
-import com.google.common.io.Files;
 import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 
@@ -18,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -51,7 +51,8 @@ public class MuCreateISOTest {
         files.put(tempFile2.getName(), tempFile2);
         tempFile2.deleteOnExit();
 
-        File tempDir1 = Files.createTempDir();
+        //File tempDir1 = Files.createTempDir();
+        File tempDir1 = Files.createTempDirectory(null).toFile();
         ISO9660Directory dir = root.addDirectory(tempDir1);
         tempDir1.deleteOnExit();
 

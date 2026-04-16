@@ -22,6 +22,8 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileFactory;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.file.util.FileSet;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +77,14 @@ public class TransferableFileSet implements Transferable {
     /** Is DataFlavor.stringFlavor supported ? */
     private boolean stringFlavorSupported = true;
 
-    /** Is text/uri-list (RFC 2483) flavor supported ? */
+    /** Is text/uri-list (RFC 2483) flavor supported ?
+     * -- SETTER --
+     *  Sets whether the <code>text/uri-list</code> (RFC 2483) should be supported by this Transferable
+     *  (supported by default).
+     *
+     * @param supported <code>true</code> to support the flavor
+     */
+    @Setter
     private boolean textUriFlavorSupported = true;
 
     /** Does DataFlavor.stringFlavor transfer the files' full paths or filenames only ? */
@@ -141,16 +150,6 @@ public class TransferableFileSet implements Transferable {
      */
     public void setStringDataFlavorSupported(boolean supported) {
         this.stringFlavorSupported = supported;
-    }
-
-    /**
-     * Sets whether the <code>text/uri-list</code> (RFC 2483) should be supported by this Transferable
-     * (supported by default).
-     *
-     * @param supported <code>true</code> to support the flavor
-     */
-    public void setTextUriFlavorSupported(boolean supported) {
-        this.textUriFlavorSupported = supported;
     }
 
     /**
@@ -282,10 +281,7 @@ public class TransferableFileSet implements Transferable {
     }
 
 
-    //////////////////////////
-    // Transferable methods //
-    //////////////////////////
-
+    @Override
     public DataFlavor[] getTransferDataFlavors() {
         List<DataFlavor> supportedDataFlavorsV = new ArrayList<>();
 
@@ -301,13 +297,13 @@ public class TransferableFileSet implements Transferable {
         if(textUriFlavorSupported)
             supportedDataFlavorsV.add(TEXT_URI_FLAVOR);
 
-        DataFlavor supportedDataFlavors[] = new DataFlavor[supportedDataFlavorsV.size()];
+        DataFlavor[] supportedDataFlavors = new DataFlavor[supportedDataFlavorsV.size()];
         supportedDataFlavorsV.toArray(supportedDataFlavors);
 
         return supportedDataFlavors;
     }
 
-
+    @Override
     public boolean isDataFlavorSupported(DataFlavor dataFlavor) {
         if(dataFlavor.equals(FILE_SET_DATA_FLAVOR))
             return fileSetFlavorSupported;
@@ -321,7 +317,8 @@ public class TransferableFileSet implements Transferable {
         return false;
     }
 
-
+    @NotNull
+    @Override
     public Object getTransferData(DataFlavor dataFlavor) throws UnsupportedFlavorException {
         int nbFiles = fileSet.size();
 

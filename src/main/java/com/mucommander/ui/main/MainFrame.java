@@ -58,9 +58,8 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.WeakHashMap;
 
 /**
  * This is the main frame, which contains all other UI components visible on a mucommander window.
@@ -142,7 +141,7 @@ public class MainFrame implements LocationListener {
     private boolean singlePanel;
 
     /** Contains all registered ActivePanelListener instances, stored as weak references */
-    private final WeakHashMap<ActivePanelListener, ?> activePanelListeners = new WeakHashMap<>();
+    private final Map<ActivePanelListener, ?> activePanelListeners = Collections.synchronizedMap(new WeakHashMap<>());
 
     private JPanel insetsPane;
 

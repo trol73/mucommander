@@ -49,7 +49,7 @@ import java.util.Map;
  * </ul>
  *
  * <p>
- * Note that this action's behaviour is strictly equivalent to that of {@link OpenAction} in the
+ * Note that this action's behavior is strictly equivalent to that of {@link OpenAction} in the
  * active panel. Differences will only occur in the inactive panel, and then again only when possible.
  *
  * <p>
@@ -59,8 +59,6 @@ import java.util.Map;
  * @author Nicolas Rinaudo
  */
 public class OpenInBothPanelsAction extends SelectedFileAction {
-    // - Initialization ------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------
     /**
      * Creates a new <code>OpenInBothPanelsAction</code> with the specified parameters.
      * @param mainFrame  frame to which the action is attached.

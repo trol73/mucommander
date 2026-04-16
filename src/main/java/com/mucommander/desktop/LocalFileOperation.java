@@ -69,7 +69,7 @@ public abstract class LocalFileOperation implements DesktopOperation {
      * By default, this method will call {@link #extractTarget(Object[])} on the specified parameters
      * and pass the resulting {@link AbstractFile} instance to {@link #canExecute(AbstractFile)}.
      * <p>
-     * This behaviour can be overriden by implementations, although most cases can be handled through
+     * This behavior can be overridden by implementations, although most cases can be handled through
      * {@link #canExecute(AbstractFile)} instead.
      * 
      * @param  target operation parameters.
@@ -118,7 +118,7 @@ public abstract class LocalFileOperation implements DesktopOperation {
      *   </li>
      * </ul>
      * <p>
-     * This behaviour can be overridden by implementations to fit their own needs, although it's probably not a great idea.
+     * This behavior can be overridden by implementations to fit their own needs, although it's probably not a great idea.
      *
      * @param  target operation parameters.
      * @return        <code>null</code> if the parameters are not legal, a {@link com.mucommander.commons.file.AbstractFile} instance instead.

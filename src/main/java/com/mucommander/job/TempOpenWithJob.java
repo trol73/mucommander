@@ -102,7 +102,7 @@ public class TempOpenWithJob extends TempCopyJob {
                     if(currentDestFile.getChangeablePermissions().getBitValue(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION))
                         currentDestFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
                 } catch(IOException e) {
-                    LOGGER.debug("Caught exception while changing permissions of "+currentDestFile, e);
+                    LOGGER.debug("Caught exception while changing permissions of {}", currentDestFile, e);
                     return false;
                 }
             }
@@ -120,7 +120,7 @@ public class TempOpenWithJob extends TempCopyJob {
         try {
             ProcessRunner.execute(command.getTokens(tempFiles), baseDestFolder);
         } catch(Exception e) {
-            LOGGER.debug("Caught exception executing "+command+" "+tempFiles, e);
+            LOGGER.debug("Caught exception executing {} {}", command, tempFiles, e);
         }
     }
 }

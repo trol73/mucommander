@@ -22,11 +22,9 @@ public class C {
 
     static {
         try {
-            INSTANCE = (CLibrary)Native.loadLibrary("c", CLibrary.class);
-        }
-        catch(Throwable e) {
+            INSTANCE = Native.load("c", CLibrary.class);
+        } catch(Throwable e) {
             LOGGER.info("Unable to load C library", e);
-
             // java.lang.UnsatisfiedLinkError is thrown if the CPU architecture is not supported by JNA.
             INSTANCE = null;
         }

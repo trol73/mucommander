@@ -30,6 +30,8 @@ import java.security.NoSuchAlgorithmException;
 import com.mucommander.commons.file.*;
 import com.mucommander.commons.file.impl.adb.AdbFile;
 import com.mucommander.desktop.DesktopManager;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,29 +61,53 @@ import com.mucommander.ui.main.MainFrame;
 public abstract class TransferFileJob extends FileJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransferFileJob.class);
 	
-    /** Contains the number of bytes processed in the current file so far, see {@link #getCurrentFileByteCounter()} ()} */
+    /** Contains the number of bytes processed in the current file so far, see {@link #getCurrentFileByteCounter()} ()}
+     * -- GETTER --
+     *  Returns the number of bytes that have been processed in the current file.
+     */
+    @Getter
     private final ByteCounter currentFileByteCounter;
 
     /** Contains the number of bytes skipped in the current file so far, see {@link #getCurrentFileSkippedByteCounter()} ()} */
     private final ByteCounter currentFileSkippedByteCounter;
 
-    /** Contains the number of bytes processed so far, see {@link #getTotalByteCounter()} */
+    /** Contains the number of bytes processed so far, see {@link #getTotalByteCounter()}
+     * -- GETTER --
+     *  Returns a that holds the total number of bytes that have been processed by this job so far.
+     */
+    @Getter
     private final ByteCounter totalByteCounter;
 
-    /** Contains the number of bytes skipped so far (resumed files), see {@link #getTotalSkippedByteCounter()} */
+    /** Contains the number of bytes skipped so far (resumed files), see {@link #getTotalSkippedByteCounter()}
+     * -- GETTER --
+     *  Returns a
+     *  that holds the total number of bytes that have been skipped by this job so far.
+     *  Bytes are skipped when file transfers are resumed.
+     */
+    @Getter
     private final ByteCounter totalSkippedByteCounter;
 
     /** InputStream currently being processed, may be null */
     private ThroughputLimitInputStream tlin;
 
-    /** ThroughputLimit in bytes per second, -1 initially (no limit) */
+    /** ThroughputLimit in bytes per second, -1 initially (no limit)
+     * -- GETTER --
+     *  Returns the current transfer throughput limit, in bytes per second. <code>0</code> or <code>-1</code> means that
+     *  there currently is no limit to the attainable transfer speed (full speed).
+     */
+    @Getter
     private long throughputLimit = -1;
 
     /** Has the file currently being processed been skipped ? */
     private boolean currentFileSkipped;
 
     /** If true, all transfers will be checked for integrity: the checksum of the source and destination file will
-     *  be calculated and compared to verify they match. */
+     *  be calculated and compared to verify they match.
+     * -- SETTER --
+     *  Specifies if file transfers need to be checked for data integrity. If <code>true</code> is specified, the
+     *  checksum of the source and destination files will both be calculated and compared to verify they match.
+     */
+    @Setter
     private boolean integrityCheckEnabled;
 
     /** True when the checksum of the source or destination file is being calculated. */
@@ -126,7 +152,7 @@ public abstract class TransferFileJob extends FileJob {
             copyFile(sourceFile, destFile, append);
             destFile.changePermission(PermissionAccesses.USER_ACCESS, PermissionTypes.WRITE_PERMISSION, false);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Copy error", e);
             throw new FileTransferException(FileTransferException.OPENING_DESTINATION);
         }
     }
@@ -195,8 +221,7 @@ public abstract class TransferFileJob extends FileJob {
                     LOGGER.debug("IOException caught, throwing FileTransferException", e);
                     throw new FileTransferException(FileTransferException.OPENING_SOURCE);
                 }
-                if (destFile instanceof AdbFile) {
-                    AdbFile adbFile = (AdbFile)destFile;
+                if (destFile instanceof AdbFile adbFile) {
                     try {
                         adbFile.pullFrom(sourceFile);
                     } catch (IOException e) {
@@ -293,7 +318,6 @@ public abstract class TransferFileJob extends FileJob {
                 }
                 return true;
             } catch(FileTransferException e) {
-                e.printStackTrace();
                 // If the job was interrupted by the user at the time the exception occurred, it most likely means that
                 // the IOException was caused by the stream being closed as a result of the user interruption.
                 // If that is the case, the exception should not be interpreted as an error.
@@ -404,7 +428,7 @@ public abstract class TransferFileJob extends FileJob {
             try {
                 tlin.close();
             } catch(IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Close error", e);
             }
         }
     }
@@ -418,16 +442,6 @@ public abstract class TransferFileJob extends FileJob {
      */
     boolean isIntegrityCheckEnabled() {
         return integrityCheckEnabled;
-    }
-
-    /**
-     * Specifies if file transfers need to be checked for data integrity. If <code>true</code> is specified, the
-     * checksum of the source and destination files will both be calculated and compared to verify they match.
-     *
-     * @param integrityCheckEnabled true if file transfers need to be checked for data integrity
-     */
-    public void setIntegrityCheckEnabled(boolean integrityCheckEnabled) {
-        this.integrityCheckEnabled = integrityCheckEnabled;
     }
 
     /**
@@ -481,15 +495,6 @@ public abstract class TransferFileJob extends FileJob {
     }
 
     /**
-     * Returns the number of bytes that have been processed in the current file.
-     *
-     * @return the number of bytes that have been processed in the current file
-     */
-    public ByteCounter getCurrentFileByteCounter() {
-        return currentFileByteCounter;
-    }
-
-    /**
      * Returns the number of bytes that have been skipped in the current file. Bytes are skipped when file transfers
      * are resumed.
      *
@@ -506,26 +511,6 @@ public abstract class TransferFileJob extends FileJob {
      */
     public long getCurrentFileSize() {
         return getCurrentFile() == null ? -1 : getCurrentFile().getSize();
-    }
-
-
-    /**
-     * Returns a {@link ByteCounter} that holds the total number of bytes that have been processed by this job so far.
-     *
-     * @return a ByteCounter that holds the total number of bytes that have been processed by this job so far
-     */
-    public ByteCounter getTotalByteCounter() {
-        return totalByteCounter;
-    }
-
-    /**
-     * Returns a {@link ByteCounter} that holds the total number of bytes that have been skipped by this job so far.
-     * Bytes are skipped when file transfers are resumed.
-     *
-     * @return a ByteCounter that holds the total number of bytes that have been skipped by this job so far
-     */
-    public ByteCounter getTotalSkippedByteCounter() {
-        return totalSkippedByteCounter;
     }
 
 
@@ -552,16 +537,6 @@ public abstract class TransferFileJob extends FileJob {
         }
     }
 
-    /**
-     * Returns the current transfer throughput limit, in bytes per second. <code>0</code> or <code>-1</code> means that
-     * there currently is no limit to the attainable transfer speed (full speed).
-     *
-     * @return the current transfer throughput limit, in bytes per second
-     */
-    public long getThroughputLimit() {
-        return throughputLimit;
-    }
-    
 
     /**
      * Overrides {@link FileJob#jobStopped()} to stop any file processing by closing the source InputStream.

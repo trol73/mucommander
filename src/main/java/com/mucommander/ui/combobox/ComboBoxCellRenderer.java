@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.combobox;
 
+import lombok.Setter;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -29,8 +31,9 @@ public class ComboBoxCellRenderer<E> implements ListCellRenderer<E> {
     private Color backgroundColor;
     private Color selectedTextColor;
     private Color selectedBackgroundColor;
+    @Setter
     private Font  font;
-    private JLabel label;
+    private final JLabel label;
 
     public ComboBoxCellRenderer() {
         label = new JLabel();
@@ -41,7 +44,6 @@ public class ComboBoxCellRenderer<E> implements ListCellRenderer<E> {
     public void setBackground(Color color) {backgroundColor = color;}
     public void setSelectionForeground(Color color) {selectedTextColor = color;}
     public void setSelectionBackground(Color color) {selectedBackgroundColor = color;}
-    public void setFont(Font f) {font = f;}
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
         if(value!=null)

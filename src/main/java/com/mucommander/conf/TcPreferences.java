@@ -121,7 +121,7 @@ public class TcPreferences implements TcPreferencesAPI {
 	public static final String  SHELL_ENCODING                    = SHELL_SECTION + '.' + "encoding";
 	/** Whether shell encoding should be auto-detected. */
 	public static final String  AUTODETECT_SHELL_ENCODING         = SHELL_SECTION + '.' + "autodetect_encoding";
-	/** Default shell encoding auto-detection behaviour. */
+	/** Default shell encoding auto-detection behavior. */
 	public static final boolean DEFAULT_AUTODETECT_SHELL_ENCODING = true;
 
 

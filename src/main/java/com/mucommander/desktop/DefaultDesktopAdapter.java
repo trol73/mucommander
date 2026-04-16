@@ -99,7 +99,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * @see      #isMiddleMouseButton(MouseEvent)
      */
     public boolean isLeftMouseButton(MouseEvent e) {
-        return (e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0;
+        return (e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0;
     }
 
     /**
@@ -114,7 +114,7 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * @see      #isLeftMouseButton(MouseEvent)
      */
     public boolean isRightMouseButton(MouseEvent e) {
-        return (e.getModifiers() & MouseEvent.BUTTON3_MASK) !=0;
+        return (e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) !=0;
     }
 
     /**
@@ -128,8 +128,8 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
      * @see      #isLeftMouseButton(MouseEvent)
      * @see      #isMiddleMouseButton(MouseEvent)
      */
-    public boolean isMiddleMouseButton(MouseEvent e) {return (
-            e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0;
+    public boolean isMiddleMouseButton(MouseEvent e) {
+        return (e.getModifiersEx() & MouseEvent.BUTTON2_DOWN_MASK) != 0;
     }
 
     /**
@@ -191,14 +191,11 @@ public class DefaultDesktopAdapter implements DesktopAdapter {
 
     @Override
     public String getDefaultTerminalAppCommand() {
-        switch (OsFamily.getCurrent()) {
-            case WINDOWS:
-                return "cmd /c start cmd.exe /K \"cd /d $p\"";
-            case LINUX:
-                return "gnome-terminal --working-directory=$p";
-            case MAC_OS_X:
-                return "open -a Terminal .";
-        }
-        return "";
+        return switch (OsFamily.getCurrent()) {
+            case WINDOWS -> "cmd /c start cmd.exe /K \"cd /d $p\"";
+            case LINUX -> "gnome-terminal --working-directory=$p";
+            case MAC_OS_X -> "open -a Terminal .";
+            default -> "";
+        };
     }
 }

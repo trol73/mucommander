@@ -21,6 +21,7 @@ package com.mucommander.core;
 import java.util.List;
 import java.util.Vector;
 
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +55,16 @@ public class LocalLocationHistory {
 	/** FolderPanel which is being monitored */
 	private final FolderPanel folderPanel;
 
-	/** Last folder which can be recalled on next startup */
-	private String lastRecallableFolder;
+	/** Last folder which can be recalled on next startup
+     * -- GETTER --
+     *  Returns the last visited folder that can be saved when the application terminates, and recalled next time
+     *  the application is started.
+     *  <p>The returned folder will NOT be a folder on a remote filesystem which would be likely not to be reachable next
+	 *  time the app is started, or a removable media drive (cd/dvd/floppy) under Windows, which would trigger a nasty
+	 *  'drive not ready' popup dialog if the drive is not available or the media has changed.
+     */
+	@Getter
+    private String lastRecallableFolder;
 
 
 	/**
@@ -211,20 +220,4 @@ public class LocalLocationHistory {
 		return history.contains(folderURL);
 	}
 
-
-	/**
-	 * Returns the last visited folder that can be saved when the application terminates, and recalled next time
-	 * the application is started.
-	 *
-	 * <p>The returned folder will NOT be a folder on a remote filesystem
-	 * which would be likely not to be reachable next time the app is started, or a removable media drive
-	 * (cd/dvd/floppy) under Windows, which would trigger a nasty 'drive not ready' popup dialog if the drive
-	 * is not available or the media has changed.
-	 *
-	 * @return the last visited folder that can be saved when the application terminates, and recalled next time
-	 * the application is started
-	 */
-	public String getLastRecallableFolder() {
-		return this.lastRecallableFolder;
-	}
 }

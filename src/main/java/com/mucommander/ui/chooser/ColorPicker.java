@@ -19,6 +19,7 @@
 package com.mucommander.ui.chooser;
 
 import com.mucommander.ui.icon.IconManager;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +36,7 @@ import java.util.WeakHashMap;
 public class ColorPicker extends JButton implements ActionListener, AWTEventListener {
 
     private Robot robot;
+    @Getter
     private boolean isActive;
 
     private final WeakHashMap<ColorChangeListener, ?> listeners = new WeakHashMap<>();
@@ -111,10 +113,6 @@ public class ColorPicker extends JButton implements ActionListener, AWTEventList
         this.isActive = active;
     }
 
-
-    public boolean isActive() {
-        return isActive;
-    }
 
     public void addColorChangeListener(ColorChangeListener listener) {
         listeners.put(listener, null);

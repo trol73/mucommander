@@ -20,11 +20,10 @@ public class Shell32 {
     private static Shell32API INSTANCE;
 
     static {
-        if(OsFamily.WINDOWS.isCurrent()) {        // Don't even bother if we're not running Windows
+        if (OsFamily.WINDOWS.isCurrent()) {        // Don't even bother if we're not running Windows
             try {
-                INSTANCE = (Shell32API)Native.loadLibrary("shell32", Shell32API.class, W32APIOptions.UNICODE_OPTIONS);
-            }
-            catch(Throwable e) {
+                INSTANCE = Native.load("shell32", Shell32API.class, W32APIOptions.UNICODE_OPTIONS);
+            } catch(Throwable e) {
                 // java.lang.UnsatisfiedLinkError is thrown if the CPU architecture is not supported by JNA.
                 INSTANCE = null;
             }
@@ -37,7 +36,7 @@ public class Shell32 {
      * @return <code>true</code> if the Shell32 API can be accessed on the current OS/CPU architecture
      */
     public static boolean isAvailable() {
-        return INSTANCE!=null;
+        return INSTANCE != null;
     }
 
     /**

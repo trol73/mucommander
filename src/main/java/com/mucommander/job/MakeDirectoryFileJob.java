@@ -45,9 +45,9 @@ import com.mucommander.ui.main.MainFrame;
 public class MakeDirectoryFileJob extends FileJob {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MakeDirectoryFileJob.class);
 	
-    private AbstractFile destFolder;
+    private final AbstractFile destFolder;
 
-    private boolean mkfileMode;
+    private final boolean mkfileMode;
     private long allocateSpace;
     private boolean executable;
 
@@ -102,11 +102,9 @@ public class MakeDirectoryFileJob extends FileJob {
             return false;
         }
 
-        boolean makeAsRoot = false;
-
         do {
             try {
-                LOGGER.debug("Creating " + file);
+                LOGGER.debug("Creating {}", file);
 
                 // Check for file collisions, i.e. if the file already exists in the destination
                 int collision = FileCollisionChecker.checkForCollision(null, file);
@@ -158,9 +156,7 @@ public class MakeDirectoryFileJob extends FileJob {
                 int action;
                 if (needAdminPermissions && !mkfileMode) {
                     if (OsFamily.MAC_OS_X.isCurrent()) {
-                        if (!mkfileMode) {
-                            tryMkDirAsAdministrator(file.getAbsolutePath(), null);
-                        }
+                        tryMkDirAsAdministrator(file.getAbsolutePath(), null);
                         return true;
                     } else {
                         action = showErrorDialog(
@@ -222,7 +218,7 @@ public class MakeDirectoryFileJob extends FileJob {
                     mkfileOut = file.getOutputStream();
 
                     // Use BufferPool to avoid excessive memory allocation and garbage collection
-                    byte buffer[] = BufferPool.getByteArray();
+                    byte[] buffer = BufferPool.getByteArray();
                     int bufferSize = buffer.length;
 
                     try {

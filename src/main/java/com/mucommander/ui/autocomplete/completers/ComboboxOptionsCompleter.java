@@ -21,6 +21,7 @@ package com.mucommander.ui.autocomplete.completers;
 import com.mucommander.ui.autocomplete.AutocompleterTextComponent;
 import com.mucommander.ui.autocomplete.completers.services.PrefixFilter;
 
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -34,7 +35,7 @@ public class ComboboxOptionsCompleter extends Completer {
 	public ComboboxOptionsCompleter() {	}
 
 	@Override
-    protected Vector<String> getUpdatedSuggestions(AutocompleterTextComponent component) {
+    protected List<String> getUpdatedSuggestions(AutocompleterTextComponent component) {
     	return PrefixFilter.createPrefixFilter(component.getText()).filter(component.getItemNames());
 	}
 	

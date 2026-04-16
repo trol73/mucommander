@@ -187,7 +187,7 @@ public class FolderChangeMonitor implements Runnable, WindowListener, LocationLi
                     needToClearRefreshQueueCounter++;
                 }
             } catch (Throwable t) {
-                t.printStackTrace();
+                LOGGER.error("Execution error", t);
             }
         }
     }

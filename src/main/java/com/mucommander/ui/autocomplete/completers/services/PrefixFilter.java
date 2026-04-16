@@ -18,7 +18,8 @@
 
 package com.mucommander.ui.autocomplete.completers.services;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A <code>PrefixFilter</code> matches strings that start with certain prefix.
@@ -27,7 +28,7 @@ import java.util.Vector;
  */
 
 public class PrefixFilter {
-	private String prefix;
+	private final String prefix;
 	
 	private PrefixFilter(String prefix) {
 		this.prefix = prefix!=null ? prefix.toLowerCase() : null;
@@ -57,8 +58,8 @@ public class PrefixFilter {
 	 * @param strings - Array of strings.
 	 * @return Vector of strings which start with this IMAGE_FILTER's prefix.
 	 */
-	public Vector<String> filter(String[] strings) {
-		Vector<String> result = new Vector<>();
+	public List<String> filter(String[] strings) {
+		List<String> result = new ArrayList<>();
         for (String s : strings) {
             if (accept(s))
                 result.add(s);
@@ -72,10 +73,9 @@ public class PrefixFilter {
 	 * @param strings - Vector of strings.
 	 * @return Vector of strings which start with this IMAGE_FILTER's prefix.
 	 */
-	public Vector<String> filter(Vector<String> strings) {
-		Vector<String> result = new Vector<>();
-
-        for(String s : strings) {
+	public List<String> filter(List<String> strings) {
+		List<String> result = new ArrayList<>();
+        for (String s : strings) {
 			if (accept(s))
 				result.add(s);
 		}		

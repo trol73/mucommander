@@ -9,9 +9,9 @@ import com.mucommander.commons.io.RandomAccessInputStream;
 import com.mucommander.commons.io.RandomAccessOutputStream;
 
 /**
- * This class represents an {@link AbstractFile} that doesn't exists for UI purposes.
- * External libraries generally return null for path to non existing file, so in order
- * to be able to present such non existing file, we use this class.
+ * This class represents an {@link AbstractFile} that doesn't exist for UI purposes.
+ * External libraries generally return null for path to non-existing file, so in order
+ * to be able to present such non-existing file, we use this class.
  *
  * @author Arik Hadas
  */

@@ -20,6 +20,8 @@ package com.mucommander.ui.button;
 
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.impl.MuteProxyAction;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -53,6 +55,8 @@ public abstract class PopupButton extends NonFocusableButton {
     private JPopupMenu popupMenu;
 
     /** Location of the popup menu, relative to the button */
+    @Setter
+    @Getter
     private int popupMenuLocation = BOTTOM;
 
     /** Controls the number of milliseconds to hold down the mouse button on the button to display the popup menu */
@@ -87,7 +91,7 @@ public abstract class PopupButton extends NonFocusableButton {
 
     /**
      * Sets the action to be performed when this button is clicked. If <code>null</code> is passed, a popup menu will
-     * displayed when this button is clicked.
+     * be displayed when this button is clicked.
      */
     @Override
     public void setAction(Action buttonClickedAction) {
@@ -100,14 +104,6 @@ public abstract class PopupButton extends NonFocusableButton {
         }
 
         this.buttonClickedAction = buttonClickedAction;
-    }
-
-    public int getPopupMenuLocation() {
-        return popupMenuLocation;
-    }
-
-    public void setPopupMenuLocation(int location) {
-        this.popupMenuLocation = location;
     }
 
     /**

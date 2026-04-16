@@ -27,6 +27,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.text.Position;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +55,8 @@ public class QuickListDataList<T> extends JList<T> {
 	
 	private final static int VISIBLE_ROWS_COUNT = 10;
 
-	private final QuickSearch quickSearch = new QuickListQuickSearch();
+	@Getter
+    private final QuickSearch quickSearch = new QuickListQuickSearch();
 	
 	private final Component nextFocusableComponent;
 
@@ -78,11 +81,7 @@ public class QuickListDataList<T> extends JList<T> {
 		return new DataListItemRenderer();
 	}
 
-	public QuickSearch getQuickSearch() {
-		return quickSearch;
-	}
-
-	/**
+    /**
 	 * This function is called before showing TablePopupWithDataList.
 	 * It does the required steps before the popup is shown.	
 	 */
@@ -136,10 +135,14 @@ public class QuickListDataList<T> extends JList<T> {
 
 	protected class DataListItemRenderer extends DefaultListCellRenderer implements ThemeListener {
 
-		private Color selectedItemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
-		private Color selectedItemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR);
-		private Color itemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);
-		private Color itemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR);
+		@Setter
+        private Color selectedItemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_BACKGROUND_COLOR);
+		@Setter
+        private Color selectedItemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_SELECTED_ITEM_FOREGROUND_COLOR);
+		@Setter
+        private Color itemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);
+		@Setter
+        private Color itemForeground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_FOREGROUND_COLOR);
 
 		private Font itemFont = ThemeManager.getCurrentFont(ThemeData.QUICK_LIST_ITEM_FONT);
 
@@ -178,24 +181,8 @@ public class QuickListDataList<T> extends JList<T> {
 			return label;
 		}
 
-		public void setSelectedItemBackground(Color selectedItemBackground) {
-			this.selectedItemBackground = selectedItemBackground;
-		}
 
-		public void setSelectedItemForeground(Color selectedItemForeground) {
-			this.selectedItemForeground = selectedItemForeground;
-		}
-
-		public void setItemBackground(Color itemBackground) {
-			this.itemBackground = itemBackground;
-		}
-
-		public void setItemForeground(Color itemForeground) {
-			this.itemForeground = itemForeground;
-		}
-
-
-		@Override
+        @Override
 		public void colorChanged(ColorChangedEvent event) {
             if (event.getColorId() == ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR) {
                 itemBackground = ThemeManager.getCurrentColor(ThemeData.QUICK_LIST_ITEM_BACKGROUND_COLOR);

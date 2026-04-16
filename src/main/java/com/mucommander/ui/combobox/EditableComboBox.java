@@ -18,6 +18,9 @@
 
 package com.mucommander.ui.combobox;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import java.awt.*;
@@ -50,17 +53,25 @@ public class EditableComboBox<E> extends SaneComboBox<E> {
     private ComboBoxCellRenderer<E> renderer;
     /**
      * The text field used as the combo box's editor
+     * -- GETTER --
+     *  Returns the text field used as the combo box's editor.
      */
+    @Getter
     private JTextField textField;
 
     /**
      * Contains all registered EditableComboBoxListener instances, stored as weak references
      */
-    private WeakHashMap<EditableComboBoxListener, Object> listeners = new WeakHashMap<>();
+    private final WeakHashMap<EditableComboBoxListener, Object> listeners = new WeakHashMap<>();
 
     /**
      * Specifies whether the text field's contents is updated when an item is selected in the associated combo box
+     * -- SETTER --
+     *  If true is specified, when an item is selected in this combo box, the text field's contents
+     *  will be automatically replaced by the selected item's string representation.
+
      */
+    @Setter
     private boolean comboSelectionUpdatesTextField;
 
 
@@ -120,23 +131,6 @@ public class EditableComboBox<E> extends SaneComboBox<E> {
 
 
     /**
-     * Returns the text field used as the combo box's editor.
-     */
-    public JTextField getTextField() {
-        return textField;
-    }
-
-
-    /**
-     * If true is specified, when an item is selected in this combo box, the text field's contents
-     * will be automatically replaced by the selected item's string representation.
-     */
-    public void setComboSelectionUpdatesTextField(boolean comboSelectionUpdatesTextField) {
-        this.comboSelectionUpdatesTextField = comboSelectionUpdatesTextField;
-    }
-
-
-    /**
      * If true is returned, when an item is selected in this combo box, the text field's contents
      * will be automatically replaced by the selected item's string representation.
      * This feature is disabled by default (false is returned).
@@ -189,7 +183,7 @@ public class EditableComboBox<E> extends SaneComboBox<E> {
                     if (keyCode == KeyEvent.VK_ENTER) {
                         // Note that since the event is not consumed, JComboBox will catch it and fire
                     } else if (keyCode == KeyEvent.VK_ESCAPE) {
-                        // Explicitely hide popup menu, JComboBox does not seem do it automatically (at least under Mac OS X + Java 1.5 and Java 1.4)
+                        // Explicitly hide popup menu, JComboBox does not seem do it automatically (at least under Mac OS X + Java 1.5 and Java 1.4)
                         hidePopup();
                         // Consume the event so that it is not propagated, since dialogs catch this event to close the window
                         keyEvent.consume();

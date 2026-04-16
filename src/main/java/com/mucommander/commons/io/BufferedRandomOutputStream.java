@@ -31,16 +31,24 @@ import java.io.IOException;
  */
 public class BufferedRandomOutputStream extends RandomAccessOutputStream {
 
-    /** The underlying random access output stream */
+    /**
+     * The underlying random access output stream
+     */
     private final RandomAccessOutputStream raos;
 
-    /** The buffer where written bytes are accumulated before being sent to the underlying output stream */
+    /**
+     * The buffer where written bytes are accumulated before being sent to the underlying output stream
+     */
     private byte[] buffer;
 
-    /** The current number of bytes waiting to be flushed to the underlying output stream */
+    /**
+     * The current number of bytes waiting to be flushed to the underlying output stream
+     */
     private int count;
 
-    /** The default buffer size if none is specified */
+    /**
+     * The default buffer size if none is specified
+     */
     public final static int DEFAULT_BUFFER_SIZE = 65536;
 
 
@@ -90,7 +98,7 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
         if (count >= buffer.length)
             flushBuffer();
 
-        buffer[count++] = (byte)b;
+        buffer[count++] = (byte) b;
     }
 
     /**
@@ -112,10 +120,10 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
      * stream's buffer, flushing the buffer to the underlying output stream as
      * needed. However, if the requested data length is equal or larger than this stream's
      * buffer, then this method will flush the buffer and write the
-     * bytes directly to the underlying output stream. Thus redundant
+     * bytes directly to the underlying output stream. Thus, redundant
      * <code>RandomBufferedOutputStream</code>s will not copy data unnecessarily.
      *
-     * @param b the data.
+     * @param b   the data.
      * @param off the start offset in the data.
      * @param len the number of bytes to write.
      * @throws IOException if an I/O error occurs.
@@ -182,10 +190,10 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
      */
     @Override
     public synchronized void close() throws IOException {
-        if(buffer!=null) {      // buffer is null if close() was already called
+        if (buffer != null) {      // buffer is null if close() was already called
             try {
                 flush();
-            } catch(IOException ignore) {
+            } catch (IOException ignore) {
             }
 
             // Release the buffer
@@ -194,17 +202,5 @@ public class BufferedRandomOutputStream extends RandomAccessOutputStream {
         }
 
         raos.close();
-    }
-
-    /**
-     * This method is overridden to release the internal buffer if {@link #close()} has not been called, to avoid any
-     * memory leak.
-     */
-    @Override
-    protected void finalize() {
-        // If this stream hasn't been closed, release the buffer before finalizing the object
-        if (buffer != null) {
-            BufferPool.releaseByteArray(buffer);
-        }
     }
 }
