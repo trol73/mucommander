@@ -25,8 +25,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.core.Layout;
 
-import com.mucommander.utils.MuLogging;
-import com.mucommander.utils.MuLogging.LogLevel;
+import com.mucommander.utils.TcLogging;
+import com.mucommander.utils.TcLogging.LogLevel;
 import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
 import com.mucommander.conf.TcPreferences;
@@ -128,7 +128,7 @@ public class DebugConsoleAppender extends AppenderBase<ILoggingEvent> {
         
         public LogLevel getLevel() {
         	if (logLevel == null) {
-                logLevel = MuLogging.getLevel(loggingEvent);
+                logLevel = TcLogging.getLevel(loggingEvent);
             }
         	return logLevel;
         }

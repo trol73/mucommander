@@ -57,7 +57,7 @@ JVM_OPENS_APPLE="--add-opens java.desktop/com.apple.eawt=ALL-UNNAMED\
 
 JVM_PARAMS="-Xmx128m -Xms128m -Dfile.encoding=UTF-8 -XX:ReservedCodeCacheSize=64m -XX:+IgnoreUnrecognizedVMOptions"
 JVM_LOGING="-Dslf4j.provider=ch.qos.logback.classic.spi.LogbackServiceProvider"
-JVM_OPTS="$JVM_OPENS $JVM_OPENS_APPLE $JVM_PARAMS $JVM_LOGING -Djava.system.class.loader=$CLASS_LOADER"
+JVM_OPTS="$JVM_OPENS $JVM_OPENS_APPLE $JVM_PARAMS $JVM_LOGING -Djava.system.class.loader=$CLASS_LOADER -Dlog.stdout=false"
 
 
 # ------------ shadow

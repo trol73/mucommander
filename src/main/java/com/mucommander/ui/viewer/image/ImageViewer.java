@@ -48,6 +48,21 @@ import com.mucommander.ui.theme.ThemeListener;
 import com.mucommander.ui.theme.ThemeManager;
 import com.mucommander.ui.viewer.FileFrame;
 import com.mucommander.ui.viewer.FileViewer;
+import com.twelvemonkeys.imageio.plugins.bmp.BMPImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.bmp.CURImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.dds.DDSImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.hdr.HDRImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.icns.ICNSImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.iff.IFFImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.pcx.PCXImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.pnm.PNMImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.psd.PSDImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.sgi.SGIImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.tga.TGAImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.webp.WebPImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.xwd.XWDImageReaderSpi;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.image4j.codec.ico.ICODecoder;
 import org.apache.batik.transcoder.Transcoder;
@@ -56,9 +71,6 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.formats.pnm.PnmImageParser;
-import org.apache.commons.imaging.formats.psd.PsdImageParser;
-import org.apache.commons.imaging.formats.tiff.TiffImageParser;
 import ru.trolsoft.ui.TMenuSeparator;
 
 
@@ -81,7 +93,6 @@ class ImageViewer extends FileViewer implements ActionListener {
     //private BufferedImage scaledImage;
     private double zoomFactor;
     private boolean vectorImage;
-	
     /** Menu bar */
     private final JMenu controlsMenu;
     // Items //
@@ -105,21 +116,45 @@ class ImageViewer extends FileViewer implements ActionListener {
      */
     private boolean mouseMovementIssueFixed = false;
 
-    static {
-        IIORegistry registry = IIORegistry.getDefaultInstance();
-        registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
+    private static boolean initiated = false;
+
+    public static void init() {
+        if (initiated) {
+            return;
+        }
+        try {
+            IIORegistry registry = IIORegistry.getDefaultInstance();
+            registry.registerServiceProvider(new JPEGImageReaderSpi());
+            registry.registerServiceProvider(new PSDImageReaderSpi());
+            registry.registerServiceProvider(new TIFFImageReaderSpi());
+            registry.registerServiceProvider(new BMPImageReaderSpi());
+            registry.registerServiceProvider(new CURImageReaderSpi());
+            registry.registerServiceProvider(new DDSImageReaderSpi());
+            registry.registerServiceProvider(new HDRImageReaderSpi());
+            registry.registerServiceProvider(new ICNSImageReaderSpi());
+            registry.registerServiceProvider(new IFFImageReaderSpi());
+            registry.registerServiceProvider(new PCXImageReaderSpi());
+            registry.registerServiceProvider(new PNMImageReaderSpi());
+            registry.registerServiceProvider(new SGIImageReaderSpi());
+            registry.registerServiceProvider(new TGAImageReaderSpi());
+            registry.registerServiceProvider(new WebPImageReaderSpi());
+            registry.registerServiceProvider(new XWDImageReaderSpi());
+        } catch (Exception e) {
+            log.error("Error registering additional image service providers", e);
+        }
+        initiated = true;
     }
 
-
     ImageViewer() {
+        init();
     	imageViewerImpl = new ImageViewerImpl();
-    	
+
     	setComponentToPresent(imageViewerImpl);
-    	
+
     	// create Go menu
     	MnemonicHelper menuMnemonicHelper = new MnemonicHelper();
-    	controlsMenu = MenuToolkit.addMenu(i18n("image_viewer.controls_menu"), menuMnemonicHelper, null);
-    	
+        controlsMenu = MenuToolkit.addMenu(i18n("image_viewer.controls_menu"), menuMnemonicHelper, null);
+
         nextImageItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.next_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), this);
         prevImageItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.previous_image"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), this);
         controlsMenu.add(new TMenuSeparator());
@@ -131,14 +166,12 @@ class ImageViewer extends FileViewer implements ActionListener {
             zoomOutItem = MenuToolkit.addMenuItem(controlsMenu, i18n("image_viewer.zoom_out"), menuMnemonicHelper, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), this);
         }
     }
-    
+
     @Override
     public JMenuBar getMenuBar() {
     	JMenuBar menuBar = super.getMenuBar();
-    	
         menuBar.add(controlsMenu);
         setMainKeyListener(imageViewerImpl, menuBar);
-    	
     	return menuBar;
     }
 
@@ -170,37 +203,9 @@ class ImageViewer extends FileViewer implements ActionListener {
             statusBar.setFileSize(file.getSize());
             statusBar.setDateTime(file.getLastModifiedDate());
         }
-        int imageWidth, imageHeight;
-
-        final String ext = file.getExtension().toLowerCase();
-        if ("scr".equals(ext) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
-            this.image = ZxSpectrumScrImage.load(file.getInputStream());
-            if (statusBar != null) {
-                statusBar.setImageBpp(4);
-            }
-        } else if ("psd".equals(ext)) {
-            this.image = new PsdImageParser().getBufferedImage(loadFile(file), null);
-        } else if ("tif".equals(ext) || "tiff".equals(ext)) {
-            this.image = new TiffImageParser().getBufferedImage(loadFile(file), null);
-        } else if ("ico".equals(ext)) {
-            this.image = ICODecoder.read(file.getInputStream()).getFirst();
-            //this.image = (BufferedImage) (new IcoImageParser().getAllBufferedImages(loadFile(file)).get(0));
-        } else if ("pnm".equals(ext) || "pbm".equals(ext) || "pgm".equals(ext) || "ppm".equals(ext)) {
-            // TODO pBm raw format reading error
-            this.image = new PnmImageParser().getAllBufferedImages(loadFile(file)).getFirst();
-        } else if ("svg".equals(ext)) {
-            this.image = transcodeSvgDocument(file, 0, 0);
-        } else {
-            try (InputStream is = file.getInputStream()) {
-                this.image = ImageIO.read(is);
-            }
-            if (statusBar != null) {
-                statusBar.setImageBpp(image.getColorModel().getPixelSize());
-            }
-        }
-        vectorImage = "svg".equalsIgnoreCase(ext);
-        imageWidth = image.getWidth();
-        imageHeight = image.getHeight();
+        loadImageFile(file);
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
         this.hasTransparentPixels = image.getColorModel().hasAlpha();
 
         if (statusBar != null) {
@@ -228,6 +233,31 @@ class ImageViewer extends FileViewer implements ActionListener {
         } catch (IOException e) {
             log.error("Stream close error", e);
         }
+    }
+
+    private void loadImageFile(AbstractFile file) throws IOException {
+        final String ext = file.getExtension().toLowerCase();
+        if ("scr".equals(ext) && file.getSize() == ZxSpectrumScrImage.SCR_IMAGE_FILE_SIZE) {
+            this.image = ZxSpectrumScrImage.load(file.getInputStream());
+            if (statusBar != null) {
+                statusBar.setImageBpp(4);
+            }
+        } else if ("ico".equals(ext)) {
+            this.image = ICODecoder.read(file.getInputStream()).getFirst();
+        } else if ("svg".equals(ext)) {
+            this.image = transcodeSvgDocument(file, 0, 0);
+        } else {
+            try (InputStream is = file.getInputStream()) {
+                this.image = ImageIO.read(is);
+            }
+            if (image == null) {
+                throw new IllegalArgumentException("No reader for a given file: " + file);
+            }
+            if (statusBar != null) {
+                statusBar.setImageBpp(image.getColorModel().getPixelSize());
+            }
+        }
+        vectorImage = "svg".equalsIgnoreCase(ext);
     }
 
 
@@ -263,7 +293,6 @@ class ImageViewer extends FileViewer implements ActionListener {
         }
     }
 
-	
 
     private synchronized void zoom(double factor) {
         setFrameCursor(CURSOR_WAIT);
@@ -332,7 +361,7 @@ class ImageViewer extends FileViewer implements ActionListener {
 
     private void checkZoom() {
 //        Dimension d = MuSnapshot.getScreenSize();
-		
+
 //        zoomInItem.setEnabled(zoomFactor < 1.0 || (2*zoomFactor*image.getWidth(null) < d.width
 //                                                 && 2*zoomFactor*image.getHeight(null) < d.height));
 //
@@ -525,18 +554,15 @@ class ImageViewer extends FileViewer implements ActionListener {
      * Image viewer panel
      */
     private class ImageViewerImpl extends JPanel implements MouseMotionListener, MouseListener, ThemeListener {
-
     	private Color backgroundColor;
-    	
 
-    	
     	ImageViewerImpl() {
     		backgroundColor = ThemeManager.getCurrentColor(Theme.EDITOR_BACKGROUND_COLOR);
             ThemeManager.addCurrentThemeListener(this);
             addMouseListener(this);
             addMouseMotionListener(this);
         }
-    	
+
 
         @Override
         public void paint(Graphics g) {
@@ -586,12 +612,12 @@ class ImageViewer extends FileViewer implements ActionListener {
                 }
             }
         }
-        
+
         @Override
         public synchronized Dimension getPreferredSize() {
             return image == null ? new Dimension(320, 200) : new Dimension(getScaledWidth(), getScaledHeight());
         }
-    	
+
 
         /**
          * Receives theme color changes notifications.
@@ -661,8 +687,6 @@ class ImageViewer extends FileViewer implements ActionListener {
         public void mouseExited(MouseEvent e) {
             setFrameCursor(CURSOR_DEFAULT);
         }
-
-
 
 
         /**

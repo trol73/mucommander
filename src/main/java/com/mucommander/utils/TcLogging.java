@@ -21,8 +21,10 @@ package com.mucommander.utils;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.*;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
 import com.mucommander.conf.TcPreferences;
@@ -38,14 +40,14 @@ import java.util.Date;
  *
  * @author Maxence Bernard, Arik Hadas
  */
-public class MuLogging {
+public class TcLogging {
 
     /**
      * Levels of log printings
      */
     public enum LogLevel {
         OFF,
-        SEVERE,
+        ERROR,
         WARNING,
         INFO,
         CONFIG,
@@ -62,7 +64,7 @@ public class MuLogging {
         public static LogLevel valueOf(Level logbackLevel) {
             return switch (logbackLevel.toInt()) {
                 case Level.OFF_INT -> LogLevel.OFF;
-                case Level.ERROR_INT -> LogLevel.SEVERE;
+                case Level.ERROR_INT -> LogLevel.ERROR;
                 case Level.WARN_INT -> LogLevel.WARNING;
                 case Level.INFO_INT -> LogLevel.INFO;
                 case Level.DEBUG_INT -> LogLevel.FINE;
@@ -78,7 +80,7 @@ public class MuLogging {
          */
         public Level toLogbackLevel() {
             return switch (this) {
-                case SEVERE -> Level.ERROR;
+                case ERROR -> Level.ERROR;
                 case WARNING -> Level.WARN;
                 case INFO, CONFIG -> Level.INFO;
                 case FINE, FINER -> Level.DEBUG;
@@ -157,23 +159,17 @@ public class MuLogging {
         // Remove default appenders
         rootLogger.detachAndStopAllAppenders();
 
-        // and add ours
-        Appender<ILoggingEvent>[] appenders = createAppenders(loggerContext);
-        for (Appender<ILoggingEvent> appender : appenders) {
-            rootLogger.addAppender(appender);
+        // and add custom
+        consoleAppender = createConsoleAppender(loggerContext, new CustomLoggingLayout(OsFamily.getCurrent().isUnixBased()));
+        debugConsoleAppender = createDebugConsoleAppender(loggerContext, new CustomLoggingLayout(false));
+
+        if (!"false".equals(System.getProperty("log.stdout"))) {
+            rootLogger.addAppender(consoleAppender);
         }
+        rootLogger.addAppender(debugConsoleAppender);
 
         // Set the log level to the value defined in the configuration
         updateLogLevel(getLogLevel());
-    }
-
-    private static Appender<ILoggingEvent>[] createAppenders(LoggerContext loggerContext) {
-        Layout<ILoggingEvent> layout = new CustomLoggingLayout();
-
-        consoleAppender = createConsoleAppender(loggerContext, layout);
-        debugConsoleAppender = createDebugConsoleAppender(loggerContext, layout);
-
-        return new Appender[]{consoleAppender, debugConsoleAppender};
     }
 
     private static ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext loggerContext, Layout<ILoggingEvent> layout) {
@@ -201,27 +197,137 @@ public class MuLogging {
     }
 
     private static class CustomLoggingLayout extends LayoutBase<ILoggingEvent> {
+        private final boolean colored;
+
+        CustomLoggingLayout(boolean colored) {
+            this.colored = colored;
+        }
 
         private final static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        private static final String RESET = "\u001B[0m";
+        private static final String RED = "\u001B[31m";
+        private static final String YELLOW = "\u001B[33m";
+        private static final String GREEN = "\u001B[32m";
+        private static final String MAGENTA = "\u001B[35m";
+        private static final String CYAN = "\u001B[36m";
+        private static final String BLUE = "\u001B[34m";
+
+        private static final String BOLD_RED = "\u001B[1;31m";
+        private static final String BOLD_YELLOW = "\u001B[1;33m";
+        private static final String BOLD_GREEN = "\u001B[1;32m";
+        private static final String BOLD_WHITE = "\u001B[1;37m";
+        private static final String BOLD_CYAN = "\u001B[1;36m";
+        private static final String BOLD_BLUE = "\u001B[1;34m";
+
+        private static final String HI_RED = "\u001B[0;91m";
+        private static final String HI_GREEN = "\u001B[0;92m";
+        private static final String HI_BLUE = "\u001B[0;94m";
+        private static final String HI_WHITE = "\u001B[0;97m";
+
+        private static final String BOLD_HI_WHITE = "\u001B[1;97m";
+
 
         public String doLayout(ILoggingEvent event) {
             StackTraceElement stackTraceElement = event.getCallerData()[0];
 
             StringBuilder sb = new StringBuilder(128);
             sb.append("[");
+            if (colored) sb.append(HI_BLUE);
             sb.append(SIMPLE_DATE_FORMAT.format(new Date(event.getTimeStamp())));
+            if (colored) sb.append(RESET);
             sb.append("] ");
+            if (colored) sb.append(getColorForLevel(getLevel(event)));
             sb.append(getLevel(event));
+            if (colored) {
+                while (sb.length() < 50) {
+                    sb.append(" ");
+                }
+            }
+
             sb.append(" ");
+            if (colored) sb.append(MAGENTA);
             sb.append(stackTraceElement.getFileName());
-            sb.append("#");
-            sb.append(stackTraceElement.getMethodName());
-            sb.append(",");
+            if (colored) sb.append(RESET);
+            sb.append(":");
+            if (colored) sb.append(HI_WHITE);
             sb.append(stackTraceElement.getLineNumber());
+            if (colored) sb.append(RESET);
+            sb.append("#");
+            if (colored) sb.append(CYAN);
+            sb.append(stackTraceElement.getMethodName());
             sb.append(" ");
+            if (colored) {
+                while (sb.length() < 130) {
+                    sb.append(" ");
+                }
+            }
+            if (colored) sb.append(BOLD_WHITE);
             sb.append(event.getFormattedMessage());
+            if (colored) sb.append(RESET);
             sb.append(CoreConstants.LINE_SEPARATOR);
+
+            if (event.getThrowableProxy() != null) {
+                if (colored) {
+                    sb.append(HI_RED);
+                }
+                convertThrowable(sb, event.getThrowableProxy(), "");
+                if (colored) {
+                    sb.append(RESET);
+                }
+            }
             return sb.toString();
+        }
+
+        private String getColorForLevel(LogLevel level) {
+            return switch (level) {
+                case ERROR -> BOLD_RED;
+                case WARNING -> BOLD_YELLOW;
+                case INFO, CONFIG -> BOLD_GREEN;
+                case FINE -> BOLD_CYAN;
+                case FINER, FINEST -> BOLD_CYAN;
+                default -> "";
+            };
+        }
+
+        private void convertThrowable(StringBuilder sb, ch.qos.logback.classic.spi.IThrowableProxy throwableProxy, String prefix) {
+            sb.append(prefix);
+            sb.append(throwableProxy.getClassName());
+            sb.append(": ");
+            sb.append(throwableProxy.getMessage());
+            sb.append(CoreConstants.LINE_SEPARATOR);
+
+            StackTraceElementProxy[] stackTraceElementProxies = throwableProxy.getStackTraceElementProxyArray();
+            if (stackTraceElementProxies != null) {
+                for (StackTraceElementProxy step : stackTraceElementProxies) {
+                    sb.append(prefix);
+                    sb.append("\t");
+                    String sstep = step.toString();
+                    if (colored) {
+                        sstep = sstep.replace("(", BOLD_BLUE +"(" + MAGENTA).replace(")", BOLD_BLUE + ")" + HI_RED);
+                    }
+                    sb.append(sstep);
+                    sb.append(CoreConstants.LINE_SEPARATOR);
+                }
+            }
+
+            ch.qos.logback.classic.spi.IThrowableProxy[] suppressed = throwableProxy.getSuppressed();
+            if (suppressed != null) {
+                for (ch.qos.logback.classic.spi.IThrowableProxy suppressedThrowable : suppressed) {
+                    sb.append(prefix);
+                    sb.append("\t... suppressed exception(s):");
+                    sb.append(CoreConstants.LINE_SEPARATOR);
+                    convertThrowable(sb, suppressedThrowable, prefix + "\t");
+                }
+            }
+
+            ch.qos.logback.classic.spi.IThrowableProxy cause = throwableProxy.getCause();
+            if (cause != null) {
+                sb.append(prefix);
+                sb.append("\t... caused by:");
+                sb.append(CoreConstants.LINE_SEPARATOR);
+                convertThrowable(sb, cause, prefix);
+            }
         }
     }
 }

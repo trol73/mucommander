@@ -33,8 +33,8 @@ import java.util.Map;
 import javax.swing.*;
 
 import com.mucommander.ui.combobox.TcComboBox;
-import com.mucommander.utils.MuLogging;
-import com.mucommander.utils.MuLogging.LogLevel;
+import com.mucommander.utils.TcLogging;
+import com.mucommander.utils.TcLogging.LogLevel;
 import com.mucommander.ui.action.ActionProperties;
 import com.mucommander.ui.action.impl.RefreshAction;
 import com.mucommander.ui.action.impl.ShowDebugConsoleAction;
@@ -44,11 +44,11 @@ import com.mucommander.ui.main.MainFrame;
 /**
  * This dialog shows the last log messages collected by {@link DebugConsoleAppender} and allows them to be copied
  * to the clipboard. It also makes it possible to change the log level, the level combo box being preset to the
- * level returned by {@link MuLogging#getLogLevel()}.
+ * level returned by {@link TcLogging#getLogLevel()}.
  *
  * @see ShowDebugConsoleAction
  * @see DebugConsoleAppender
- * @see MuLogging#setLogLevel(LogLevel)
+ * @see TcLogging#setLogLevel(LogLevel)
  * @author Maxence Bernard
  */
 public class DebugConsoleDialog extends FocusDialog implements ActionListener, ItemListener {
@@ -135,7 +135,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     private JPanel createComboPanel() {
         JPanel comboPanel = new JPanel(new FlowLayout());
         comboPanel.add(new JLabel(i18n("debug_console_dialog.level")+":"));
-        LogLevel logLevel = MuLogging.getLogLevel();
+        LogLevel logLevel = TcLogging.getLogLevel();
 
         levelComboBox.setSelectedItem(logLevel);
         levelComboBox.addItemListener(this);
@@ -149,12 +149,12 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
      * Refreshes the JList with the log records contained by {@link DebugConsoleAppender}.
      */
     private void refreshLogRecords() {
-        DebugConsoleAppender handler = MuLogging.getDebugConsoleAppender();
+        DebugConsoleAppender handler = TcLogging.getDebugConsoleAppender();
         if (handler == null) {
             return;
         }
         final LoggingEvent[] records = handler.getLogRecords();
-        final LogLevel currentLogLevel = MuLogging.getLogLevel();
+        final LogLevel currentLogLevel = TcLogging.getLogLevel();
         if (records == null) {
             return;
         }
@@ -176,7 +176,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
     private void updateLogLevel() {
         LogLevel newLevel = (LogLevel) levelComboBox.getSelectedItem();
         if (newLevel != null) {
-            MuLogging.setLogLevel(newLevel);
+            TcLogging.setLogLevel(newLevel);
         }
     }
 
@@ -258,7 +258,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
 
         private Color getLevelColor(LogLevel logLevel) {
             return switch (logLevel) {
-                case SEVERE -> Color.RED;
+                case ERROR -> Color.RED;
                 case WARNING -> new Color(255, 100, 0);     // Dark orange
                 case CONFIG -> Color.BLUE;
                 case INFO -> Color.BLACK;

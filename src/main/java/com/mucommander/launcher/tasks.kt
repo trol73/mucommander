@@ -42,7 +42,7 @@ import com.mucommander.ui.main.toolbar.ToolBarIO
 import com.mucommander.ui.notifier.AbstractNotifier
 import com.mucommander.ui.theme.ThemeManager
 import com.mucommander.ui.tools.ToolsEnvironment
-import com.mucommander.utils.MuLogging
+import com.mucommander.utils.TcLogging
 import com.mucommander.utils.text.CustomDateFormat
 import com.mucommander.utils.text.Translator
 import org.slf4j.LoggerFactory
@@ -254,7 +254,7 @@ fun start(helper: LauncherCmdHelper) {
         exitProcess(1)
     }
     try {
-        MuLogging.configureLogging()
+        TcLogging.configureLogging()
     } catch (e: Exception) {
         helper.printFileError("Configure logging error", e)
     }

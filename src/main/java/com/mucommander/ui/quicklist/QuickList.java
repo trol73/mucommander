@@ -76,7 +76,6 @@ public abstract class QuickList extends JPopupMenu implements FocusListener {
 	@Override
 	@SuppressWarnings("deprecated")
 	public void show() {
-		new Exception().printStackTrace();
 //	public void setVisible(boolean visible) {
 //		if (!visible) {
 //			super.setVisible(false);
