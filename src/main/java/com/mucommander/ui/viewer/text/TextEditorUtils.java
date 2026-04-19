@@ -24,10 +24,12 @@ import com.mucommander.commons.io.bom.BOMInputStream;
 import com.mucommander.ui.viewer.text.utils.CodeFormatException;
 import com.mucommander.ui.viewer.text.utils.CodeFormatter;
 import com.mucommander.utils.text.Translator;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.PushbackInputStream;
 
+@Slf4j
 class TextEditorUtils {
 
     static FileType detectFileFormat(AbstractFile file) {
@@ -40,21 +42,20 @@ class TextEditorUtils {
             is.unread(bytes, 0, readBytes);
         } catch (IOException e) {
             BufferPool.releaseByteArray(bytes);
-            e.printStackTrace();
+            log.error("detectFileFormat read error", e);
             try {
                 file.closePushbackInputStream();
             } catch (IOException e1) {
-                e1.printStackTrace();
+                log.error("detectFileFormat close error", e);
             }
             return FileType.NONE;
         }
+        String str = new String(bytes, 0, readBytes).trim().toLowerCase();
+        BufferPool.releaseByteArray(bytes);
         if (readBytes < 5) {
-            BufferPool.releaseByteArray(bytes);
             return FileType.NONE;
         }
 
-        String str = new String(bytes, 0, readBytes).trim().toLowerCase();
-        BufferPool.releaseByteArray(bytes);
         if (str.startsWith("<?xml")) {
             return FileType.XML;
         } else if (str.startsWith("<?php")) {

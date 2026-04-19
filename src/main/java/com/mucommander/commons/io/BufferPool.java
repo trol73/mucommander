@@ -57,7 +57,10 @@ public class BufferPool {
     private static final Logger LOGGER = LoggerFactory.getLogger(BufferPool.class);
 
     /** List of BufferContainer instances that wraps available buffers */
-    private static List<BufferContainer> bufferContainers = new ArrayList<>();
+    private static final List<BufferContainer> bufferContainers = new ArrayList<>();
+
+    private static final ByteArrayFactory BYTE_ARRAY_FACTORY = new ByteArrayFactory();
+    private static final CharArrayFactory CHAR_ARRAY_FACTORY = new CharArrayFactory();
 
     /** The initial default buffer size */
     final static int INITIAL_DEFAULT_BUFFER_SIZE = 65536;
@@ -73,6 +76,7 @@ public class BufferPool {
 
     /** Current combined size of all pooled buffers, in bytes */
     private static long poolSize;
+
 
 
     /**
@@ -100,7 +104,7 @@ public class BufferPool {
      * @return a byte array of the specified size
      */
     public static synchronized byte[] getByteArray(int length) {
-        return (byte[])getBuffer(new ByteArrayFactory(), length);
+        return (byte[])getBuffer(BYTE_ARRAY_FACTORY, length);
     }
 
     /**
@@ -128,7 +132,7 @@ public class BufferPool {
      * @return a char array of the specified length
      */
     public static synchronized char[] getCharArray(int length) {
-        return (char[])getBuffer(new CharArrayFactory(), length);
+        return (char[])getBuffer(CHAR_ARRAY_FACTORY, length);
     }
 
     /**
@@ -229,7 +233,7 @@ public class BufferPool {
             }
         }
 
-        LOGGER.trace("Creating new buffer with {} size=", factory, size);
+        LOGGER.trace("Creating new buffer with {} size={}", factory, size);
 
         // No buffer with the same class and size found in the pool, create a new one and return it
         return factory.newBuffer(size);
@@ -249,7 +253,7 @@ public class BufferPool {
      * @throws IllegalArgumentException if specified buffer is null
      */
     public static synchronized boolean releaseByteArray(byte[] buffer) {
-        return releaseBuffer(buffer, new ByteArrayFactory());
+        return releaseBuffer(buffer, BYTE_ARRAY_FACTORY);
     }
 
     /**
@@ -265,7 +269,7 @@ public class BufferPool {
      * @throws IllegalArgumentException if specified buffer is null
      */
     public static synchronized boolean releaseCharArray(char[] buffer) {
-        return releaseBuffer(buffer, new CharArrayFactory());
+        return releaseBuffer(buffer, CHAR_ARRAY_FACTORY);
     }
 
     /**
@@ -315,19 +319,17 @@ public class BufferPool {
      * @throws IllegalArgumentException if specified buffer is null
      */
     public static synchronized boolean releaseBuffer(Object buffer, BufferFactory factory) {
-        if(buffer==null)
+        if (buffer == null) {
             throw new IllegalArgumentException("specified buffer is null");
-
+        }
         BufferContainer bufferContainer = factory.newBufferContainer(buffer);
-
-        if(bufferContainers.contains(bufferContainer)) {
+        if (bufferContainers.contains(bufferContainer)) {
             LOGGER.info("Warning: specified buffer is already in the pool: {}", buffer);
             return false;
         }
-
         long bufferSize = bufferContainer.getSize();        // size in bytes (!= length)
 
-        if(maxPoolSize!=-1 && poolSize+bufferSize>maxPoolSize) {
+        if (maxPoolSize >= 0 && poolSize + bufferSize > maxPoolSize) {
             LOGGER.info("Warning: maximum pool size reached, buffer not added to the pool of type {}. Enable trace to get the buffer.", buffer.getClass());
             LOGGER.trace("Warning: maximum pool size reached, buffer not added to the pool of type {} : {}", buffer.getClass(), buffer);
             return false;
@@ -436,11 +438,6 @@ public class BufferPool {
     public static synchronized void setMaxPoolSize(long maxPoolSize) {
         BufferPool.maxPoolSize = maxPoolSize;
     }
-
-
-    ///////////////////
-    // Inner classes //
-    ///////////////////
 
     /**
      * Wraps a buffer instance and provides information about the wrapped buffer.

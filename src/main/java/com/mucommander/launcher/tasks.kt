@@ -171,9 +171,12 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
     val enableNotificationsTask = LauncherTask("enable_notifications") {
         enableNotifications()
     }.depends(registerActionsTask)
+    val prepareWindowManagerTask = LauncherTask("prepared_window_manager") {
+        WindowManager.setupAfterCreation()
+    }
     val createMainWindowTask = LauncherTask("create_main_window") {
         createMainWindow(helper)
-    }.depends(loadThemeTask, showSplashTask, initDesktopTask, registerActionsTask, loadCustomCommandsTask)
+    }.depends(loadThemeTask, showSplashTask, initDesktopTask, registerActionsTask, loadCustomCommandsTask, prepareWindowManagerTask)
     val disposeSplashTask = LauncherTask("dispose_splash") {
         splashScreen?.dispose()
         splashScreen = null
@@ -216,6 +219,7 @@ fun prepareLauncherTasks(helper: LauncherCmdHelper): List<LauncherTask> {
             initCustomDateFormatTask,
             startBonjourTask,
             initBarsTask,
+            prepareWindowManagerTask,
         createMainWindowTask,
             enableNotificationsTask,
             initDesktopTask,

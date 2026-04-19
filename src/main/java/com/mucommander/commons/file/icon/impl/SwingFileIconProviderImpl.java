@@ -31,8 +31,7 @@ import com.mucommander.commons.file.util.ResourceLoader;
 import com.mucommander.commons.io.SilenceableOutputStream;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.trolsoft.macosx.RetinaImageIcon;
 import ru.trolsoft.utils.FileUtils;
 
@@ -50,9 +49,8 @@ import java.net.URL;
  * @see SwingFileIconProvider
  * @author Maxence Bernard
  */
+@Slf4j
 class SwingFileIconProviderImpl extends LocalFileIconProvider implements CacheableFileIconProvider {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwingFileIconProviderImpl.class);
-
     /** Swing object used to retrieve file icons, used on all platforms but Mac OS X */
     private static FileSystemView fileSystemView;
 
@@ -87,7 +85,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
             FileUtils.copyFromJarFile("libquaqua64.dylib", jarPath);
             FileUtils.copyFromJarFile("libquaqua64.jnilib", jarPath);
         } catch (IOException e) {
-            LOGGER.error("Libraries prepare error", e);
+            log.error("Libraries prepare error", e);
         }
         OSXFile.setNativePath(FileUtils.getJarPath() + File.separator);
     }
@@ -166,7 +164,7 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
                 return fileChooser.getIcon(javaIoFile);
             }
         } catch (Exception e) {
-            LOGGER.info("Caught exception while retrieving system icon for file {}", javaIoFile.getAbsolutePath(), e);
+            log.info("Caught exception while retrieving system icon for file {}", javaIoFile.getAbsolutePath(), e);
             return null;
         } finally {
             if (fileSystemView != null) {
@@ -263,5 +261,10 @@ class SwingFileIconProviderImpl extends LocalFileIconProvider implements Cacheab
         }
 
         return icon;
+    }
+
+    public void cleanCache() {
+        directoryIconCache.clear();
+        fileIconCache.clear();
     }
 }

@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2014-2020 Oleg Trifonov
+ * Copyright (C) 2014-2026 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,13 @@ package com.mucommander.commons.file;
 
 import com.mucommander.commons.io.BufferPool;
 import com.mucommander.commons.io.StreamUtils;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.sevenzipjbinding.ArchiveFormat;
 
 import java.io.IOException;
 import java.io.PushbackInputStream;
 
+@Slf4j
 public abstract class SevenZipArchiveFormatDetector {
     private final int maxLen;
 
@@ -45,18 +47,17 @@ public abstract class SevenZipArchiveFormatDetector {
 
     private byte[] readFirst(AbstractFile file) {
         byte[] bytes = BufferPool.getByteArray(maxLen);
-        int readBytes;
         try {
             PushbackInputStream is = file.getPushBackInputStream(maxLen);
-            readBytes = StreamUtils.readUpTo(is, bytes);
+            int readBytes = StreamUtils.readUpTo(is, bytes);
             is.unread(bytes, 0, readBytes);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Exception on file read", e);
             BufferPool.releaseByteArray(bytes);
             try {
                 file.closePushbackInputStream();
             } catch (IOException e1) {
-                e1.printStackTrace();
+                log.error("Exception on stream close", e1);
             }
             return null;
         }

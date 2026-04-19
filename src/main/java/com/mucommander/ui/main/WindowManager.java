@@ -35,8 +35,7 @@ import com.mucommander.ui.PreloadedJFrame;
 import com.mucommander.ui.dialog.FocusDialog;
 import com.mucommander.ui.viewer.FileFrame;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.mucommander.launcher.ShutdownHook;
 import com.mucommander.commons.conf.ConfigurationEvent;
@@ -56,12 +55,11 @@ import com.mucommander.ui.helper.FocusRequester;
  * @author Maxence Bernard, Arik Hadas
  */
 //public class WindowManager implements ActionListener, WindowListener, ActivePanelListener, LocationListener, ConfigurationListener {
+@Slf4j
 public class WindowManager implements WindowListener, ConfigurationListener {
-	private static Logger logger;
-	
     // The following constants are used to compute the proper position of a new MainFrame.
 
-    /** MainFrame (main muCommander window) instances */
+    /** MainFrame (main trolCommander window) instances */
     private final List<MainFrame> mainFrames = new Vector<>();
     
     /** MainFrame currently being used (that has focus),
@@ -94,7 +92,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             try {
                 installLookAndFeel(plaf);
             } catch(Throwable e) {
-                getLogger().info("Failed to install Look&Feel {}", plaf, e);
+                log.info("Failed to install Look&Feel {}", plaf, e);
             }
         }
     }
@@ -111,6 +109,10 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         // Installs all custom look and feels.
         installCustomLookAndFeels();
         
+        TcConfigurations.addPreferencesListener(this);
+    }
+
+    public static void setupAfterCreation() {
         // Sets custom lookAndFeel if different from current lookAndFeel
         String lnfName = TcConfigurations.getPreferences().getVariable(TcPreference.LOOK_AND_FEEL);
         if (lnfName != null && !lnfName.equals(UIManager.getLookAndFeel().getName())) {
@@ -118,10 +120,8 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         }
 
         if (lnfName == null) {
-            getLogger().debug("Could load look'n feel from preferences");
+            log.debug("Could load look'n feel from preferences");
         }
-        
-        TcConfigurations.addPreferencesListener(this);
     }
 
 
@@ -219,7 +219,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         // Dispose all other frames (viewers, editors...)
         for (Frame frame : Frame.getFrames()) {
             if (frame.isShowing()) {
-                getLogger().debug("disposing frame {}", frame.getTitle());
+                log.debug("disposing frame {}", frame.getTitle());
                 frame.dispose();
             }
         }
@@ -279,7 +279,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
             ClassLoader oldLoader = currentThread.getContextClassLoader();
             currentThread.setContextClassLoader(ExtensionManager.getClassLoader());
 
-            UIManager.setLookAndFeel((LookAndFeel)Class.forName(lnfName, true, ExtensionManager.getClassLoader()).getEnclosingConstructor().newInstance());
+            UIManager.setLookAndFeel((LookAndFeel)Class.forName(lnfName, true, ExtensionManager.getClassLoader()).getDeclaredConstructor().newInstance());
 
             // Restores the contextual ClassLoader.
             currentThread.setContextClassLoader(oldLoader);
@@ -288,7 +288,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
                 SwingUtilities.updateComponentTreeUI(mainFrame.getJFrame());
             }
         } catch(Throwable e) {
-            getLogger().debug("Exception caught", e);
+            log.debug("Exception caught", e);
         }
     }
 
@@ -336,7 +336,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
      */
     @Override
     public synchronized void windowClosed(WindowEvent e) {
-        getLogger().trace("called");
+        log.trace("called");
         Object source = e.getSource();
 
         if (source instanceof PreloadedJFrame pfSource) {
@@ -391,7 +391,7 @@ public class WindowManager implements WindowListener, ConfigurationListener {
         Frame[] frames = Frame.getFrames();
         for (Frame frame : frames) {
             if (frame.isShowing()) {
-                getLogger().debug("found active frame");
+                log.debug("found active frame");
                 return true;
             }
         }
@@ -427,12 +427,5 @@ public class WindowManager implements WindowListener, ConfigurationListener {
                 setLookAndFeel(lnfName);
             }
     	}
-    }
-
-    private static Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(WindowManager.class);
-        }
-        return logger;
     }
 }

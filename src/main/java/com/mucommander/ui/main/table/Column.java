@@ -20,10 +20,11 @@ package com.mucommander.ui.main.table;
 
 import com.mucommander.commons.file.util.FileComparator;
 import com.mucommander.utils.text.Translator;
+import lombok.Getter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * Enumerates and describes the different columns used in the {@link FileTable}.
@@ -40,16 +41,31 @@ public enum Column {
     OWNER("owner", true, false, FileComparator.OWNER_CRITERION, "ToggleOwnerColumn", "SortByOwner"),
     GROUP("group", true, false, FileComparator.GROUP_CRITERION, "ToggleGroupColumn", "SortByGroup");
 
-    private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING = new HashMap<>() {{
-        Stream.of(Column.values()).forEach(column -> put(column.ordinal(), column));
-    }};
+    private static final Map<Integer, Column> ORDINAL_TO_ENUM_MAPPING;
+    static {
+        Map<Integer, Column> map = new HashMap<>();
+        for (Column column : Column.values()) {
+            map.put(column.ordinal(), column);
+        }
+        ORDINAL_TO_ENUM_MAPPING = Collections.unmodifiableMap(map);
+    }
 
     /** Standard minimum column width */
     private final static int STANDARD_MINIMUM_WIDTH = 2 * CellLabel.CELL_BORDER_WIDTH;
 
+    /**
+     * -- GETTER --
+     *  Returns this column's localized label.
+     */
+    @Getter
     private final String label;
     private final int minimumWidth;
     private final boolean showByDefault;
+    /**
+     * -- GETTER --
+     *  Returns the criterion used for sorting column values.
+     */
+    @Getter
     private final int fileComparatorCriterion;
     private final String toggleActionId;
     private final String sortByActionId;
@@ -61,15 +77,6 @@ public enum Column {
         this.fileComparatorCriterion = fileComparatorCriterion;
         this.toggleActionId = toggleActionId;
         this.sortByActionId = sortByActionId;
-    }
-
-    /**
-     * Returns this column's localized label.
-     *
-     * @return this column's localized label.
-     */
-    public String getLabel() {
-        return label;
     }
 
     /**
@@ -88,15 +95,6 @@ public enum Column {
      */
     public boolean showByDefault() {
         return showByDefault;
-    }
-
-    /**
-     * Returns the {@link FileComparator} criterion used for sorting column values.
-     *
-     * @return the {@link FileComparator} criterion used for sorting column values.
-     */
-    public int getFileComparatorCriterion() {
-        return fileComparatorCriterion;
     }
 
     /**

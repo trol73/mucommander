@@ -18,6 +18,9 @@
 
 package com.mucommander.ui.action.impl;
 
+import com.mucommander.commons.file.FileFactory;
+import com.mucommander.commons.file.icon.CacheableFileIconProvider;
+import com.mucommander.commons.file.icon.impl.SwingFileIconProvider;
 import com.mucommander.ui.action.AbstractActionDescriptor;
 import com.mucommander.ui.action.ActionCategory;
 import com.mucommander.ui.action.ActionDescriptor;
@@ -40,6 +43,10 @@ public class GarbageCollectAction extends TcAction {
 
     @Override
     public void performAction() {
+		var iconProvider = FileFactory.getDefaultFileIconProvider();
+		if (iconProvider instanceof CacheableFileIconProvider cip) {
+			cip.cleanCache();
+		}
         System.gc();
     }
 

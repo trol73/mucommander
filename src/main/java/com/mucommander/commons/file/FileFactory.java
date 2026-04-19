@@ -21,6 +21,8 @@ package com.mucommander.commons.file;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.mucommander.commons.file.impl.avrdude.AvrdudeProtocolProvider;
 import org.slf4j.Logger;
@@ -84,13 +86,13 @@ public class FileFactory {
     private static Logger logger;
 
     /** All registered protocol providers. */
-    private static final Map<String, ProtocolProvider> protocolProviders = new Hashtable<>();
+    private static final Map<String, ProtocolProvider> protocolProviders = new ConcurrentHashMap<>();
 
     /** Local file provider to avoid hashtable lookups (faster). */
     private static ProtocolProvider localFileProvider;
 
-    /** Vector of registered ArchiveFormatMapping instances */
-    private static final List<ArchiveFormatProvider> archiveFormatProvidersV = new Vector<>();
+    /** List of registered ArchiveFormatMapping instances */
+    private static final List<ArchiveFormatProvider> archiveFormatProvidersV = new CopyOnWriteArrayList<>();
 
     /** Array of registered FileProtocolMapping instances, for quicker access */
     private static ArchiveFormatProvider[] archiveFormatProviders;

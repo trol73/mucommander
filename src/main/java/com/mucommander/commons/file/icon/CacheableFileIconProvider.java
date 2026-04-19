@@ -67,4 +67,5 @@ public interface CacheableFileIconProvider extends FileIconProvider {
      */
     void addToCache(AbstractFile file, Icon icon, Dimension preferredResolution);
 
+    void cleanCache();
 }

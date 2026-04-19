@@ -21,11 +21,12 @@ package com.mucommander.commons.file;
 
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 
 /**
  * This class provides a default {@link SchemeParser} implementation. Certain scheme-specific features of the parser
@@ -62,9 +63,8 @@ import java.net.URLDecoder;
  * @see PathCanonizer
  * @author Maxence Bernard
  */
+@Slf4j
 public class DefaultSchemeParser implements SchemeParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSchemeParser.class);
-
     /** True if query should be parsed and not considered as part of the path */
     private final boolean parseQuery;
 
@@ -90,7 +90,7 @@ public class DefaultSchemeParser implements SchemeParser {
      * as part of the path otherwise
      */
     DefaultSchemeParser(boolean parseQuery) {
-        this(new DefaultPathCanonizer(System.getProperty("file.separator"), null), parseQuery);
+        this(new DefaultPathCanonizer(FileSystems.getDefault().getSeparator(), null), parseQuery);
     }
 
     /**
@@ -133,11 +133,7 @@ public class DefaultSchemeParser implements SchemeParser {
     }
 
 
-
-    /////////////////////////////////
-    // SchemeParser implementation //
-    /////////////////////////////////
-
+    @Override
     public void parse(String url, FileURL fileURL) throws MalformedURLException {
         // The general form of a URI is:
 
@@ -240,10 +236,10 @@ public class DefaultSchemeParser implements SchemeParser {
             // Filenames may contain @ chars, so atPos must be lower than next separator's position (if any)
             if (atPos != -1 && (separatorPos == -1 || atPos < separatorPos)) {
                 colonPos = authority.indexOf(':');
-                String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), "UTF-8");
+                String login = URLDecoder.decode(authority.substring(0, colonPos == -1 ? atPos : colonPos), StandardCharsets.UTF_8);
                 String password;
                 if (colonPos != -1) {
-                    password = URLDecoder.decode(authority.substring(colonPos+1, atPos), "UTF-8");
+                    password = URLDecoder.decode(authority.substring(colonPos+1, atPos), StandardCharsets.UTF_8);
                 } else {
                     password = null;
                 }
@@ -291,7 +287,7 @@ public class DefaultSchemeParser implements SchemeParser {
             // Canonize path: factor out '.' and '..' and replace '~' by the replacement string (if any)
             fileURL.setPath(pathCanonizer.canonize(path));
 
-            LOGGER.debug("Warning: path should not be empty, url={}", url);
+//            log.debug("Warning: path should not be empty, url={}", url);
 
             // Parse query part (if any)
             if (questionMarkPos != -1) {
@@ -300,7 +296,7 @@ public class DefaultSchemeParser implements SchemeParser {
         } catch (MalformedURLException e) {
             throw e;
         } catch (Exception e2) {
-            LOGGER.info("Unexpected exception in FileURL() with "+url, e2);
+            log.info("Unexpected exception in FileURL() with {}", url, e2);
             throw new MalformedURLException();
         }
     }

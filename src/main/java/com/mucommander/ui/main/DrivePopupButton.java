@@ -32,10 +32,9 @@ import com.mucommander.adb.AndroidMenu;
 import com.mucommander.adb.AdbUtils;
 import com.mucommander.bonjour.BonjourDirectory;
 import com.mucommander.utils.FileIconsCache;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.mucommander.bonjour.BonjourMenu;
 import com.mucommander.bonjour.BonjourService;
@@ -81,9 +80,8 @@ import ru.trolsoft.ui.TMenuSeparator;
  *
  * @author Maxence Bernard
  */
+@Slf4j
 public class DrivePopupButton extends PopupButton implements BookmarkListener, ConfigurationListener, LocationListener {
-    private static Logger logger;
-
     /**
      * FolderPanel instance that contains this button
      */
@@ -130,7 +128,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                 volumeFilter.setInverted(true);
             }
         } catch (PatternSyntaxException e) {
-            getLogger().info("Invalid regexp for conf variable " + TcPreferences.VOLUME_EXCLUDE_REGEXP, e);
+            log.info("Invalid regexp for conf variable " + TcPreferences.VOLUME_EXCLUDE_REGEXP, e);
         }
 
         // Initialize the volumes list
@@ -463,7 +461,7 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
                     try {
                         return FileURL.getFileURL("adb://" + deviceSerial);
                     } catch (MalformedURLException e) {
-                        e.printStackTrace();
+                        log.error("Device URL error", e);
                         return null;
                     }
                 }
@@ -644,12 +642,5 @@ public class DrivePopupButton extends PopupButton implements BookmarkListener, C
     }
 
     public void locationFailed(LocationEvent locationEvent) {
-    }
-
-    private static Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(DrivePopupButton.class);
-        }
-        return logger;
     }
 }

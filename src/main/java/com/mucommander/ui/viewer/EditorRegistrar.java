@@ -29,12 +29,12 @@ import com.mucommander.commons.file.AbstractFile;
 import com.mucommander.commons.file.FileProtocols;
 import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.runtime.OsVersion;
-import com.mucommander.ui.viewer.text.TextArea;
 import com.mucommander.utils.text.Translator;
 import com.mucommander.ui.dialog.QuestionDialog;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.main.WindowManager;
 import com.mucommander.ui.viewer.text.TextEditor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -45,6 +45,7 @@ import javax.swing.*;
  *
  * @author Maxence Bernard
  */
+@Slf4j
 public class EditorRegistrar {
 	
     /** List of registered file editors */ 
@@ -165,7 +166,7 @@ public class EditorRegistrar {
             try {
                 file.closePushbackInputStream();
             } catch (IOException e1) {
-                e1.printStackTrace();
+                log.error("IO error", e);
             }
             throw new UserCancelledException();
         }
