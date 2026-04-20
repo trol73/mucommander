@@ -6,7 +6,7 @@ package com.mucommander.commons.file.impl.zip.provider;
  *
  * @author Maxence Bernard
  */
-final class ZipEntryInfo {
+public final class ZipEntryInfo {
 
     /** Offset to the central file header */
     long centralHeaderOffset = -1;
@@ -27,8 +27,8 @@ final class ZipEntryInfo {
     String encoding;
 
     /** The filename's bytes */
-    byte filename[];
+    byte[] filename;
 
     /** The comment's bytes */
-    byte comment[];
+    byte[] comment;
 }

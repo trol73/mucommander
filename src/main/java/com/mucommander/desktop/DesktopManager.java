@@ -25,10 +25,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.commons.util.Pair;
 import com.mucommander.ui.notifier.AbstractNotifier;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,9 +54,8 @@ import javax.swing.*;
 /**
  * @author Nicolas Rinaudo
  */
+@Slf4j
 public class DesktopManager {
-	private static Logger logger;
-	
     /**
      * Represents "browse" operations.
      * <p>
@@ -114,9 +117,9 @@ public class DesktopManager {
 
 
     /** All available desktop operations. */
-    private static final Map<String, List<DesktopOperation>>[] operations = new Hashtable[3];
+    private static final List<Map<String, List<DesktopOperation>>> operations = new ArrayList<>();
     /** All known desktops. */
-    private static final List<DesktopAdapter> desktops = new ArrayList<>();
+    private static final List<DesktopAdapter> desktops = new CopyOnWriteArrayList<>();
     /** Current desktop. */
     private static DesktopAdapter desktop;
     /** Object used to create instances of {@link AbstractTrash}. */
@@ -137,25 +140,31 @@ public class DesktopManager {
      * the earlier they are registered, the lower their priority.
      */
     static {
+        for (int i = 0; i < 3; i++) {
+            operations.add(new ConcurrentHashMap<>());
+        }
         // The default desktop adapter must be registered first, as we only want to use it if nothing else worked.
         registerAdapter(new DefaultDesktopAdapter());
 
         // Unix desktops:
         // - check for Gnome before KDE, as it seems to be more popular.
         // - check for 'configured' before 'guessed', as guesses are less reliable and more expensive.
-        registerAdapter(new GuessedXfceDesktopAdapter());
-        registerAdapter(new GuessedKde3DesktopAdapter());
-        registerAdapter(new GuessedKde4DesktopAdapter());
-        registerAdapter(new GuessedGnomeDesktopAdapter());
-        registerAdapter(new ConfiguredKde3DesktopAdapter());
-        registerAdapter(new ConfiguredKde4DesktopAdapter());
-        registerAdapter(new ConfiguredGnomeDesktopAdapter());
-
+        if (OsFamily.getCurrent() == OsFamily.LINUX) {
+            registerAdapter(new GuessedXfceDesktopAdapter());
+            registerAdapter(new GuessedKde3DesktopAdapter());
+            registerAdapter(new GuessedKde4DesktopAdapter());
+            registerAdapter(new GuessedGnomeDesktopAdapter());
+            registerAdapter(new ConfiguredKde3DesktopAdapter());
+            registerAdapter(new ConfiguredKde4DesktopAdapter());
+            registerAdapter(new ConfiguredGnomeDesktopAdapter());
+        }
         // Known OS adapters.
         registerAdapter(new OpenVMSDesktopAdapter());
-        registerAdapter(new OSXDesktopAdapter());
-        registerAdapter(new Win9xDesktopAdapter());
-        registerAdapter(new WinNtDesktopAdapter());
+        if (OsFamily.getCurrent() == OsFamily.WINDOWS) {
+            registerAdapter(new OSXDesktopAdapter());
+            registerAdapter(new Win9xDesktopAdapter());
+            registerAdapter(new WinNtDesktopAdapter());
+        }
 
         // Having 1.6 specific operations registered as the lowest priority system
         // ones ensures that:
@@ -179,9 +188,8 @@ public class DesktopManager {
     /**
      * Initializes desktop management.
      * <p>
-     * If <code>install</code> is set to <code>true</code>, this method
-     * might result in installing desktop specific data such as bookmarks, keyboard
-     * shortcuts...
+     * If <code>install</code> is set to <code>true</code>, this method might result in installing desktop specific
+     * data such as bookmarks, keyboard shortcuts...
      *
      * @param install                         whether to install desktop specific information.
      * @throws DesktopInitializationException if an error occurred while initializing desktops.
@@ -193,7 +201,7 @@ public class DesktopManager {
             DesktopAdapter current = desktops.get(i);
             if (current.isAvailable()) {
                 desktop = current;
-                getLogger().debug("Using desktop: {}", desktop);
+                log.debug("Using desktop: {}", desktop);
                 desktop.init(install);
                 setTrashProvider(desktop.getTrash());
                 setNotifier(desktop.getNotifier());
@@ -227,7 +235,9 @@ public class DesktopManager {
      *
      * @param adapter desktop adapter to register.
      */
-    public static void registerAdapter(DesktopAdapter adapter) {desktops.add(adapter);}
+    public static void registerAdapter(DesktopAdapter adapter) {
+        desktops.add(adapter);
+    }
 
 
     /**
@@ -235,12 +245,12 @@ public class DesktopManager {
      */
     private static void innerRegisterOperation(String type, int priority, DesktopOperation operation) {
         // Makes sure we have a container for operations of the specified priority.
-        if (operations[priority] == null) {
-            operations[priority] = new Hashtable<>();
+        if (operations.get(priority) == null) {
+            operations.set(priority, new ConcurrentHashMap<>());
         }
 
         // Makes sure we have a container for operations of the specified type.
-        List<DesktopOperation> container = operations[priority].computeIfAbsent(type, k -> new Vector<>());
+        List<DesktopOperation> container = operations.get(priority).computeIfAbsent(type, k -> new CopyOnWriteArrayList<>());
 
         // Creates the requested entry.
         container.add(operation);
@@ -255,10 +265,10 @@ public class DesktopManager {
 
 
     private static List<DesktopOperation> getOperations(String type, int priority) {
-        if (operations[priority] == null) {
+        if (operations.get(priority) == null) {
             return null;
         }
-        return operations[priority].get(type);
+        return operations.get(priority).get(type);
     }
 
     private static DesktopOperation getAvailableOperation(String type, int priority) {
@@ -606,12 +616,5 @@ public class DesktopManager {
 
     public static List<Pair<JLabel, JComponent>> getExtendedFileProperties(AbstractFile file) {
         return desktop.getExtendedFileProperties(file);
-    }
-
-    private static Logger getLogger() {
-        if (logger == null) {
-            logger = LoggerFactory.getLogger(DesktopManager.class);
-        }
-        return logger;
     }
 }

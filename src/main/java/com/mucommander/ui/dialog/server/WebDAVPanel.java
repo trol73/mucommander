@@ -54,12 +54,9 @@ public class WebDAVPanel extends ServerPanel {
     private void updateValues() {
         lastServer = serverField.getText();
         lastUsername = usernameField.getText();
-        lastPassword = passwordField.getText();
+        lastPassword = new String(passwordField.getPassword());
     }
 
-    ////////////////////////////////
-    // ServerPanel implementation //
-    ////////////////////////////////
     @Override
     FileURL getServerURL() throws MalformedURLException {
         updateValues();
@@ -76,7 +73,7 @@ public class WebDAVPanel extends ServerPanel {
                 } else if(uri.getScheme().equalsIgnoreCase("https")){
                     port = 443;
                 }
-                url = FileProtocols.WEBDAV + "://" + lastUsername + ":" + lastPassword + "@" + uri.getHost() + ":" + port + "" + uri.getPath();
+                url = FileProtocols.WEBDAV + "://" + lastUsername + ":" + lastPassword + "@" + uri.getHost() + ":" + port + uri.getPath();
             }
         } catch (URISyntaxException ex) {
             Logger.getLogger(WebDAVPanel.class.getName()).log(Level.SEVERE, null, ex);

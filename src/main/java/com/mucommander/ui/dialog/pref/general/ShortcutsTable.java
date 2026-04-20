@@ -720,6 +720,7 @@ public class ShortcutsTable extends PrefTable implements KeyListener, ListSelect
 			
 			// action's icon column: return ImageIcon instance
 			if (columnId == ACTION_DESCRIPTION_COLUMN_INDEX) {
+				@SuppressWarnings("unchecked")
 				Pair<ImageIcon, String> description = (Pair<ImageIcon, String>) value;
 				label.setIcon(description.first);
 				label.setText(description.second);

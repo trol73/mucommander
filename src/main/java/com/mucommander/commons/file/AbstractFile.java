@@ -83,11 +83,6 @@ public abstract class AbstractFile implements FileAttributes, PermissionTypes, P
     }
 
 
-
-    /////////////////////////
-    // Overridable methods //
-    /////////////////////////
-
     /**
      * Returns the {@link FileURL} instance that represents this file's location.
      *

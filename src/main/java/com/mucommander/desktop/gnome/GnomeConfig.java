@@ -21,20 +21,21 @@ package com.mucommander.desktop.gnome;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides access to the GNOME configuration, using the <code>gconftool</code> command.
  *
  * @author Maxence Bernard
  */
+@Slf4j
 public class GnomeConfig {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GnomeConfig.class);
-	
     /** Name of the command to invoke for retrieving configuration values */
     private static final String CONFIG_COMMAND = "gconftool";
+    /** Timeout for the configuration command execution in seconds */
+    private static final long COMMAND_TIMEOUT = 5;
 
     /**
      * Returns the GNOME configuration value corresponding to the given key, <code>null</code> if this key has no value.
@@ -45,19 +46,39 @@ public class GnomeConfig {
      * command isn't available in the path.
      */
     public static String getValue(String key) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder(CONFIG_COMMAND, "-g", key);
+        processBuilder.redirectErrorStream(true);
         try {
-            Process process = Runtime.getRuntime().exec(CONFIG_COMMAND+" -g "+key);
+            Process process = processBuilder.start();
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line = br.readLine();
-                LOGGER.debug(CONFIG_COMMAND+" returned '{}' for {}", line, key);
+
+                // Wait for process completion with timeout
+                if (!process.waitFor(COMMAND_TIMEOUT, TimeUnit.SECONDS)) {
+                    process.destroyForcibly();
+                    log.warn("Command timed out for key: {}", key);
+                    throw new IOException("Command timed out: " + CONFIG_COMMAND);
+                }
+
+                int exitCode = process.exitValue();
+                if (exitCode != 0) {
+                    log.debug("Command returned exit code {} for key: {}", exitCode, key);
+                    return null;
+                }
+
+                log.debug(CONFIG_COMMAND + " returned '{}' for {}", line, key);
                 if (line == null || (line=line.trim()).isEmpty() || line.startsWith("No value set for")) {
                     return null;
                 }
                 return line;
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.debug("Interrupted while retrieving value for {}", key, e);
+            throw new IOException("Command interrupted", e);
         } catch(IOException e) {
-            LOGGER.debug("Error while retrieving value for {}", key, e);
+            log.debug("Error while retrieving value for {}", key, e);
             throw e;
         }
     }

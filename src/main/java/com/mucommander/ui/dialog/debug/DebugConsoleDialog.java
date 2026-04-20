@@ -212,7 +212,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
             model.addElement(buildStringEvent(LogLevel.INFO, t.getName() + " (" + t.getState() + ")"));
             StackTraceElement[] stackTraceElements = stackTraces.get(t);
             for (StackTraceElement ste : stackTraceElements) {
-                model.addElement(buildStringEvent(LogLevel.FINEST, "     " + ste));
+                model.addElement(buildStringEvent(LogLevel.TRACE, "     " + ste));
             }
         }
         loggingEventsList.setModel(model);
@@ -262,7 +262,7 @@ public class DebugConsoleDialog extends FocusDialog implements ActionListener, I
                 case WARNING -> new Color(255, 100, 0);     // Dark orange
                 case CONFIG -> Color.BLUE;
                 case INFO -> Color.BLACK;
-                case FINE -> Color.DARK_GRAY;
+                case DEBUG -> Color.DARK_GRAY;
                 default -> new Color(110, 110, 110);    // Between Color.GRAY and Color.DARK_GRAY
             };
         }

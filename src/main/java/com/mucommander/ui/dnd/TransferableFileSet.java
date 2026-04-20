@@ -81,8 +81,6 @@ public class TransferableFileSet implements Transferable {
      * -- SETTER --
      *  Sets whether the <code>text/uri-list</code> (RFC 2483) should be supported by this Transferable
      *  (supported by default).
-     *
-     * @param supported <code>true</code> to support the flavor
      */
     @Setter
     private boolean textUriFlavorSupported = true;
@@ -235,6 +233,7 @@ public class TransferableFileSet implements Transferable {
             }
             // File list DataFlavor
             else if(transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                @SuppressWarnings("unchecked")
                 List<File> fileList = (List<File>)transferable.getTransferData(DataFlavor.javaFileListFlavor);
 
                 files = new FileSet();

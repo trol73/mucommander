@@ -63,7 +63,7 @@ public enum FileType {
     JSON("Json", SyntaxConstants.SYNTAX_STYLE_JSON, "*.json"),
     JSON_WITH_COMMENTS("Json with comments", SyntaxConstants.SYNTAX_STYLE_JSON_WITH_COMMENTS, "*.json"),
     JSP("JSP", SyntaxConstants.SYNTAX_STYLE_JSP, "*.jsp"),
-    KOTLIN("Kotlin", SyntaxConstants.SYNTAX_STYLE_KOTLIN, "*.kt"),
+    KOTLIN("Kotlin", SyntaxConstants.SYNTAX_STYLE_KOTLIN, "*.kt,*.kts"),
     LATEX("Latex", SyntaxConstants.SYNTAX_STYLE_LATEX, "*.tex"),
     LISP("Lisp", SyntaxConstants.SYNTAX_STYLE_LISP, "*.lisp,*.lsp"),
     LUA("Lua", SyntaxConstants.SYNTAX_STYLE_LUA, "*.lua"),

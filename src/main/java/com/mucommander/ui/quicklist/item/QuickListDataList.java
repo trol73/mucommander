@@ -122,12 +122,14 @@ public class QuickListDataList<T> extends JList<T> {
 	}
 
 	public void setForegroundColors(Color foreground, Color selectedForeground) {
+		@SuppressWarnings("unchecked")
 		DataListItemRenderer cellRenderer = (DataListItemRenderer) getCellRenderer();
 		cellRenderer.setItemForeground(foreground);
 		cellRenderer.setSelectedItemForeground(selectedForeground);
 	}
 
 	public void setBackgroundColors(Color background, Color selectedBackground) {
+		@SuppressWarnings("unchecked")
 		DataListItemRenderer cellRenderer = (DataListItemRenderer) getCellRenderer();
 		cellRenderer.setItemBackground(background);
 		cellRenderer.setSelectedItemBackground(selectedBackground);

@@ -75,17 +75,13 @@ class TextEditorUtils {
 
     static void formatTextArea(TextArea textArea) throws CodeFormatException {
         String src = textArea.getText();
-        String formatted = null;
+        String formatted = switch (textArea.getFileType()) {
+            case XML -> CodeFormatter.formatXml(src);
+            case JSON -> CodeFormatter.formatJson(src);
+            default -> null;
+        };
 
-        switch (textArea.getFileType()) {
-            case XML:
-                formatted = CodeFormatter.formatXml(src);
-                break;
-            case JSON:
-                formatted = CodeFormatter.formatJson(src);
-                break;
-        }
-        if (formatted != null) {
+        if (formatted != null && !formatted.equals(src)) {
             textArea.setText(formatted);
         }
 

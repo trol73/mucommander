@@ -51,9 +51,9 @@ public class TcLogging {
         WARNING,
         INFO,
         CONFIG,
-        FINE,
+        DEBUG,
         FINER,
-        FINEST;
+        TRACE;
 
         /**
          * This method maps logback levels to trolCommander log levels
@@ -67,8 +67,8 @@ public class TcLogging {
                 case Level.ERROR_INT -> LogLevel.ERROR;
                 case Level.WARN_INT -> LogLevel.WARNING;
                 case Level.INFO_INT -> LogLevel.INFO;
-                case Level.DEBUG_INT -> LogLevel.FINE;
-                case Level.TRACE_INT -> LogLevel.FINEST;
+                case Level.DEBUG_INT -> LogLevel.DEBUG;
+                case Level.TRACE_INT -> LogLevel.TRACE;
                 default -> LogLevel.OFF;
             };
         }
@@ -83,8 +83,8 @@ public class TcLogging {
                 case ERROR -> Level.ERROR;
                 case WARNING -> Level.WARN;
                 case INFO, CONFIG -> Level.INFO;
-                case FINE, FINER -> Level.DEBUG;
-                case FINEST -> Level.TRACE;
+                case DEBUG, FINER -> Level.DEBUG;
+                case TRACE -> Level.TRACE;
                 default -> Level.OFF;
             };
         }
@@ -284,8 +284,8 @@ public class TcLogging {
                 case ERROR -> BOLD_RED;
                 case WARNING -> BOLD_YELLOW;
                 case INFO, CONFIG -> BOLD_GREEN;
-                case FINE -> BOLD_CYAN;
-                case FINER, FINEST -> BOLD_CYAN;
+                case DEBUG -> BOLD_CYAN;
+                case FINER, TRACE -> BOLD_CYAN;
                 default -> "";
             };
         }

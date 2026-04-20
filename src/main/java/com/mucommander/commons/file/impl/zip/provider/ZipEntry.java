@@ -21,8 +21,10 @@ package com.mucommander.commons.file.impl.zip.provider;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Calendar;
-import java.util.Vector;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 /**
  * Extension that adds better handling of extra fields and provides
@@ -40,8 +42,6 @@ public class ZipEntry implements Cloneable {
     /** Name/path of this entry
      * -- GETTER --
      *  Returns the name of this entry.
-     *
-     * @return the name of this entry
      */
     @Getter
     protected String name;
@@ -118,16 +118,15 @@ public class ZipEntry implements Cloneable {
     private long externalAttributes = 0;
 
     /** List of extra fields, as ZipEntraField instances */
-    private Vector<ZipExtraField> extraFields;
+    private List<ZipExtraField> extraFields;
 
     /** Contains info about how this entry is stored in the zip file */
     private ZipEntryInfo entryInfo;
 
-    /** An instance of Calendar shared through all instances of this class and used for Java &lt;-&gt; DOS time conversion */
-    private final static Calendar CALENDAR = Calendar.getInstance();
-
     /** Smallest DOS time (Epoch 1980) */
     private final static long MIN_DOS_TIME = 0x00002100L;
+
+    private static final ZoneId DEFAULT_ZONE = ZoneId.systemDefault();
 
     /** Value of the bit flag that denotes a Unix directory in the external attributes */
     private final static int UNIX_DIRECTORY_FLAG = 16384;
@@ -191,12 +190,11 @@ public class ZipEntry implements Cloneable {
      */
     public void setUnixMode(int mode) {
         boolean isDirectory = isDirectory();
-
         setExternalAttributes(
               // Unix directory flag
               ((isDirectory ? UNIX_DIRECTORY_FLAG : UNIX_FILE_FLAG) << 16)
               // Unix file permissions
-              | (mode << 16)
+              | ((long) mode << 16)
               // MS-DOS read-only attribute
               | ((mode & USER_WRITE_PERMISSION_BIT) == 0 ? MSDOS_READ_ONLY_FLAG : 0)
               // MS-DOS directory flag
@@ -239,10 +237,8 @@ public class ZipEntry implements Cloneable {
      * @param fields an array of extra fields
      */
     public void setExtraFields(ZipExtraField[] fields) {
-        extraFields = new Vector<>();
-        for (ZipExtraField field : fields) {
-            extraFields.addElement(field);
-        }
+        extraFields = new ArrayList<>();
+        Collections.addAll(extraFields, fields);
     }
 
     /**
@@ -254,10 +250,7 @@ public class ZipEntry implements Cloneable {
         if (extraFields == null) {
             return new ZipExtraField[0];
         }
-
-        ZipExtraField[] result = new ZipExtraField[extraFields.size()];
-        extraFields.copyInto(result);
-        return result;
+        return extraFields.toArray(new ZipExtraField[0]);
     }
 
     /**
@@ -272,13 +265,12 @@ public class ZipEntry implements Cloneable {
 
         ZipShort type = ze.getHeaderId();
         for (int i = 0, nbFields = extraFields.size(); i < nbFields; i++) {
-            if (extraFields.elementAt(i).getHeaderId().equals(type)) {
-                extraFields.setElementAt(ze, i);
+            if (extraFields.get(i).getHeaderId().equals(type)) {
+                extraFields.set(i, ze);
                 return;
             }
         }
-
-        extraFields.addElement(ze);
+        extraFields.add(ze);
     }
 
     /**
@@ -289,12 +281,13 @@ public class ZipEntry implements Cloneable {
      * matching field was found
      */
     public boolean removeExtraField(ZipShort type) {
-        if (extraFields == null)
+        if (extraFields == null) {
             return false;
-
-        for (int i=0, nbFields=extraFields.size(); i<nbFields; i++) {
-            if (extraFields.elementAt(i).getHeaderId().equals(type)) {
-                extraFields.removeElementAt(i);
+        }
+        for (int i = 0; i < extraFields.size(); i++) {
+            var field = extraFields.get(i);
+            if (field != null && Objects.equals(field.getHeaderId(), type)) {
+                extraFields.remove(i);
                 return true;
             }
         }
@@ -437,7 +430,7 @@ public class ZipEntry implements Cloneable {
      */
     protected void setDosTime(long dosTime) {
         this.dosTime = dosTime;
-        this.javaTime = dosTime==-1?-1:dosToJavaTime(dosTime);
+        this.javaTime = dosTime < 0 ? -1 : dosToJavaTime(dosTime);
     }
 
     /**
@@ -493,16 +486,15 @@ public class ZipEntry implements Cloneable {
      * @return time expressed as the number of milliseconds since the epoch
      */
     protected static long dosToJavaTime(long dosTime) {
-        synchronized(CALENDAR) {
-            CALENDAR.set(Calendar.YEAR, (int) ((dosTime >> 25) & 0x7f) + 1980);
-            CALENDAR.set(Calendar.MONTH, (int) ((dosTime >> 21) & 0x0f) - 1);
-            CALENDAR.set(Calendar.DATE, (int) (dosTime >> 16) & 0x1f);
-            CALENDAR.set(Calendar.HOUR_OF_DAY, (int) (dosTime >> 11) & 0x1f);
-            CALENDAR.set(Calendar.MINUTE, (int) (dosTime >> 5) & 0x3f);
-            CALENDAR.set(Calendar.SECOND, (int) (dosTime << 1) & 0x3e);
+        int year = (int) ((dosTime >> 25) & 0x7f) + 1980;
+        int month = (int) ((dosTime >> 21) & 0x0f) - 1;
+        int day = (int) (dosTime >> 16) & 0x1f;
+        int hour = (int) (dosTime >> 11) & 0x1f;
+        int minute = (int) (dosTime >> 5) & 0x3f;
+        int second = (int) (dosTime << 1) & 0x3e;
 
-            return CALENDAR.getTimeInMillis();
-        }
+        ZonedDateTime zdt = ZonedDateTime.of(year, month + 1, day, hour, minute, second, 0, DEFAULT_ZONE);
+        return zdt.toInstant().toEpochMilli();
     }
 
     /**
@@ -512,21 +504,19 @@ public class ZipEntry implements Cloneable {
      * @return time expressed in the convoluted DOS time format
      */
     protected static long javaToDosTime(long javaTime) {
-        synchronized(CALENDAR) {
-            CALENDAR.setTimeInMillis(javaTime);
+        Instant instant = Instant.ofEpochMilli(javaTime);
+        ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
 
-            int year = CALENDAR.get(Calendar.YEAR);
-            if (year < 1980) {
-                return MIN_DOS_TIME;
-            }
-
-            return ((year - 1980) << 25)
-                |  ((CALENDAR.get(Calendar.MONTH)+1) << 21)
-                |  (CALENDAR.get(Calendar.DAY_OF_MONTH) << 16)
-                |  (CALENDAR.get(Calendar.HOUR_OF_DAY) << 11)
-                |  (CALENDAR.get(Calendar.MINUTE) << 5)
-                |  (CALENDAR.get(Calendar.SECOND) >> 1);
+        long year = zdt.getYear();
+        if (year < 1980) {
+            return MIN_DOS_TIME;
         }
+        return ((year - 1980) << 25)
+                |  ((zdt.getMonthValue()) << 21)
+                |  (zdt.getDayOfMonth() << 16)
+                |  (zdt.getHour() << 11)
+                |  (zdt.getMinute() << 5)
+                |  (zdt.getSecond() >> 1);
     }
 
     /*
@@ -555,7 +545,7 @@ public class ZipEntry implements Cloneable {
      * @return <code>true</code> if the given long is a valid unsigned int value, i.e. comprised between 0 and 2^32-1
      */
     protected boolean isValidUnsignedInt(long l) {
-        return l>=0 && l<=0xFFFFFFFFL;
+        return l >= 0 && l <= 0xFFFFFFFFL;
     }
 
 
@@ -570,7 +560,7 @@ public class ZipEntry implements Cloneable {
         ZipEntry ze = (ZipEntry)super.clone();
 
         if (extraFields != null) {
-            ze.extraFields = (Vector<ZipExtraField>) extraFields.clone();
+            ze.extraFields = new ArrayList<>(extraFields);
         }
 
         return ze;
