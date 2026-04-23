@@ -240,10 +240,10 @@ public class MainFrame implements LocationListener {
 
         insetsPane = new JPanel(new BorderLayout()) {
             // Add an x=3,y=3 gap around content pane
-            @Override
-            public Insets getInsets() {
-                return new Insets(0, 3, 3, 3);      // No top inset
-            }
+//            @Override
+//            public Insets getInsets() {
+//                return new Insets(0, 3, 3, 3);      // No top inset
+//            }
         };
 
         // Below the toolbar there is the pane with insets
@@ -266,12 +266,7 @@ public class MainFrame implements LocationListener {
         splitPane = new ProportionalSplitPane(frameInstance, splitOrientation,false,
                 MainFrame.this.leftFolderPanel.getPanel(),
                 MainFrame.this.rightFolderPanel.getPanel()) {
-            @Override
-            public Insets getInsets() {
-                return new Insets(0, 0, 0, 0);
-            }
         };
-
         // Remove any default border the split pane has
         splitPane.setBorder(null);
 
@@ -287,7 +282,7 @@ public class MainFrame implements LocationListener {
 
         // Add a 2-pixel gap between the file table and status bar
         YBoxPanel southPanel = new YBoxPanel();
-        southPanel.addSpace(2);
+//        southPanel.addSpace(2);
 
         // Add status bar
         this.statusBar = new StatusBar(this);
@@ -705,15 +700,15 @@ public class MainFrame implements LocationListener {
 
         @Override
         public Component getComponentAfter(Container container, Component component) {
-        	if (component==leftFolderPanel.getFoldersTreePanel().getTree())
-		        return leftTable;
-		    if (component==rightFolderPanel.getFoldersTreePanel().getTree())
-		        return rightTable;
-		    if(component== leftFolderPanel.getLocationTextField())
+            if (component == leftFolderPanel.getFoldersTreePanel().getTree())
                 return leftTable;
-            if(component== leftTable)
+            if (component == rightFolderPanel.getFoldersTreePanel().getTree())
                 return rightTable;
-            if(component== rightFolderPanel.getLocationTextField())
+            if (component == leftFolderPanel.getLocationTextField())
+                return leftTable;
+            if (component == leftTable)
+                return rightTable;
+            if (component == rightFolderPanel.getLocationTextField())
                 return rightTable;
             // otherwise (component==table2)
             return leftTable;
@@ -750,19 +745,20 @@ public class MainFrame implements LocationListener {
         rightTable.setAutoSizeColumnsEnabled(b);
     }
     
-    /**********************************
-	 * LocationListener Implementation
-	 **********************************/
 
+    @Override
     public void locationChanged(LocationEvent e) {
         // Update window title to reflect the new current folder
         updateWindowTitle();
     }
-    
+
+    @Override
 	public void locationChanging(LocationEvent locationEvent) { }
 
+    @Override
 	public void locationCancelled(LocationEvent locationEvent) { }
 
+    @Override
 	public void locationFailed(LocationEvent locationEvent) { }
 
 

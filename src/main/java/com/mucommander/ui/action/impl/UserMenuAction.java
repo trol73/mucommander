@@ -105,7 +105,7 @@ public class UserMenuAction extends ParentFolderAction {
         historyRecord.update(e.getLine(), e.getLine(), e.getColumn(), historyRecord.getFileType(), historyRecord.getEncoding());
 
         Image image = ActionProperties.getActionIcon(EditAction.Descriptor.ACTION_ID).getImage();
-        System.out.println("open frame " + e.getMessage() + " " + e.getLine() + ":" + e.getColumn());
+        log.info("open frame {} {}:{}", e.getMessage(), e.getLine(), e.getColumn());
         EditorRegistrar.createEditorFrame(mainFrame, localMenu, image,
                 (fileFrame) -> {
                     TextEditor textEditor = (TextEditor)fileFrame.getFilePresenter();

@@ -179,7 +179,7 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
     }
 
     private static void executeInNewTerminalTabs(AbstractFile home, String[] commands) {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             OSXTerminal.addNewTabWithCommands(home, commands);
         } else {
             // TODO
@@ -189,7 +189,7 @@ public class UserPopupMenu extends JPopupMenu implements ActionListener, PopupMe
     }
 
     private static void executeInNewTerminalWindow(AbstractFile home, String... commands) {
-        if (OsFamily.getCurrent() == OsFamily.MAC_OS_X) {
+        if (OsFamily.MAC_OS_X.isCurrent()) {
             OSXTerminal.openNewWindowAndRun(home, commands);
         } else {
             // TODO

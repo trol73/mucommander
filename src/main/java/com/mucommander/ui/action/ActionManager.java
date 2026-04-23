@@ -21,6 +21,7 @@ package com.mucommander.ui.action;
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandManager;
 import com.mucommander.command.CommandType;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.ui.action.impl.*;
 import com.mucommander.ui.main.MainFrame;
 
@@ -236,6 +237,9 @@ public class ActionManager {
         registerAction(new ViewAsAction.Descriptor());
 		registerAction(new EditAsAction.Descriptor());
         registerAction(new TerminalAction.Descriptor());
+		if (OsFamily.MAC_OS_X.isCurrent()) {
+			registerAction(new TerminalAltAction.Descriptor());
+		}
         registerAction(new FindFileAction.Descriptor());
         registerAction(new CalculatorAction.Descriptor());
         registerAction(new CreateSymlinkAction.Descriptor());

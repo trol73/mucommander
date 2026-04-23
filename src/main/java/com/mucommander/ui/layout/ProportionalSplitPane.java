@@ -19,6 +19,7 @@
 package com.mucommander.ui.layout;
 
 import com.mucommander.desktop.DesktopManager;
+import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -45,7 +46,11 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
     /** Last known absolute divider location */
     private int lastDividerLocation = -1;
 
-    /** Current proportional divider location, initially 0.5f (same size for both panels) */
+    /** Current proportional divider location, initially 0.5f (same size for both panels)
+     * -- GETTER --
+     *  Returns current pane split ratio.
+     */
+    @Getter
     private float splitRatio = 0.5f;
 
     /** Window this split pane is attached to */
@@ -146,13 +151,6 @@ public class ProportionalSplitPane extends JSplitPane implements ComponentListen
         InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.clear();
         inputMap.setParent(null);
-    }
-
-    /**
-     * Returns current pane split ratio.
-     */
-    public float getSplitRatio() {
-        return this.splitRatio;
     }
 
 

@@ -23,6 +23,7 @@ import com.mucommander.conf.TcConfigurations;
 import com.mucommander.conf.TcPreference;
 import com.mucommander.conf.TcPreferences;
 import com.mucommander.desktop.DesktopManager;
+import com.mucommander.desktop.macos.OSXApplications;
 import com.mucommander.process.ProcessRunner;
 import com.mucommander.ui.action.*;
 import com.mucommander.ui.main.MainFrame;
@@ -35,25 +36,25 @@ import java.util.Map;
 
 import static com.mucommander.conf.TcPreferences.*;
 
-/**
- * @author Oleg Trifonov
- * Created on 17/12/13.
- */
+
 @Slf4j
-public class TerminalAction extends ParentFolderAction {
+public class TerminalAltAction extends ParentFolderAction {
     /**
      * Creates a new instance of <code>InternalViewAction</code>.
      *
      * @param mainFrame  frame to which the action is attached.
      * @param properties action's properties.
      */
-    private TerminalAction(MainFrame mainFrame, Map<String, Object> properties) {
+    private TerminalAltAction(MainFrame mainFrame, Map<String, Object> properties) {
         super(mainFrame, properties);
     }
 
     @Override
     public void performAction() {
         AbstractFile currentFolder = mainFrame.getActiveTable().getFileTableModel().getCurrentFolder();
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+
+        }
         if (OsFamily.LINUX.isCurrent()) {
             performOnLinux(currentFolder);
         } else {
@@ -88,7 +89,20 @@ public class TerminalAction extends ParentFolderAction {
 
 
     private static String getTerminalCommand() {
-        return switch (useCustomExternalTerminal()) {
+        int terminalType = useCustomExternalTerminal();
+        if (OsFamily.MAC_OS_X.isCurrent()) {
+            if (terminalType == TERMINAL_ITERM || terminalType == TERMINAL_CUSTOM) {
+                terminalType = TERMINAL_DEFAULT;
+            } else if (terminalType == TERMINAL_DEFAULT) {
+                if (OSXApplications.iTermInstalled()) {
+                    terminalType = TERMINAL_ITERM;
+                } else if (!getCustomExternalTerminal().isBlank()) {
+                    terminalType = TERMINAL_CUSTOM;
+                }
+            }
+        }
+
+        return switch (terminalType) {
             case TERMINAL_DEFAULT -> DesktopManager.getDefaultTerminalAppCommand();
             case TERMINAL_CUSTOM -> getCustomExternalTerminal();
             case TERMINAL_ITERM -> "open -a iTerm .";
@@ -100,7 +114,7 @@ public class TerminalAction extends ParentFolderAction {
     }
 
     private static String getCustomExternalTerminal() {
-        return TcConfigurations.getPreferences().getVariable(TcPreference.CUSTOM_EXTERNAL_TERMINAL);
+        return TcConfigurations.getPreferences().getVariable(TcPreference.CUSTOM_EXTERNAL_TERMINAL).trim();
     }
 
     private static int useCustomExternalTerminal() {
@@ -119,7 +133,7 @@ public class TerminalAction extends ParentFolderAction {
 
 
     public static final class Descriptor extends AbstractActionDescriptor {
-        public static final String ACTION_ID = "Terminal";
+        public static final String ACTION_ID = "TerminalAlternative";
 
         public String getId() {
             return ACTION_ID;
@@ -134,13 +148,12 @@ public class TerminalAction extends ParentFolderAction {
         }
 
         public KeyStroke getDefaultKeyStroke() {
-            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK);
+            return KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK);
         }
 
         public TcAction createAction(MainFrame mainFrame, Map<String,Object> properties) {
-            return new TerminalAction(mainFrame, properties);
+            return new TerminalAltAction(mainFrame, properties);
         }
-
     }
 
 }
