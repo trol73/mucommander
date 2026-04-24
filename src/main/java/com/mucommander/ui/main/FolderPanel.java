@@ -79,7 +79,7 @@ public class FolderPanel implements FocusListener, QuickListContainer, ActiveTab
      *  Returns the MainFrame that contains this panel.
      */
     @Getter
-    private final MainFrame mainFrame;
+    final MainFrame mainFrame;
 
     /**
      * -- GETTER --
@@ -186,15 +186,18 @@ public class FolderPanel implements FocusListener, QuickListContainer, ActiveTab
         c.gridx = 0;        
         locationPanel.add(driveButton, c);
 
-        // create location text field
+        // Create location text field and wrap it in a LocationBar that can
+        // alternate between the text field and a breadcrumb view (Ctrl key).
         this.locationTextField = new LocationTextField(this);
+        LocationBar locationBar = new LocationBar(this, locationTextField);
 
         // Give location field all the remaining space until the PoupupsButton
         c.weightx = 1;
         c.gridx = 1;
         // Add some space between drive button and location combo box (none by default)
         c.insets = new Insets(0, 4, 0, 0);
-        locationPanel.add(locationTextField, c);
+//        locationPanel.add(locationTextField, c);
+        locationPanel.add(locationBar, c);
 
         panel.add(locationPanel, BorderLayout.NORTH);
 

@@ -94,7 +94,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         // Listen to configuration changes to reload toolbar buttons when icon size has changed
         TcConfigurations.addPreferencesListener(this);
 
-        // create buttons for each actions and add them to the toolbar
+        // create buttons for each action and add them to the toolbar
         addButtons(ToolBarAttributes.getActions());
         
         ToolBarAttributes.addToolBarAttributesListener(this);
@@ -110,8 +110,8 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
                 // Do not add buttons for actions that do not have an icon
                 if (action != null && action.getIcon() != null) {
                     addButton(action);
+                }
             }
-        }
         }
 
         if (USE_MAC_OS_X_CLIENT_PROPERTIES) {
@@ -285,7 +285,7 @@ public class ToolBar extends JToolBar implements ConfigurationListener, MouseLis
         @Override
         public JPopupMenu getPopupMenu() {
             LocalLocationHistory locationHistory = mainFrame.getActivePanel().getFolderHistory();
-            FileURL history[] = action instanceof GoBackAction ? locationHistory.getBackFolders() : locationHistory.getForwardFolders();
+            FileURL[] history = action instanceof GoBackAction ? locationHistory.getBackFolders() : locationHistory.getForwardFolders();
 
             // If no back/forward folder, do not display popup menu
             if (history.length == 0) {

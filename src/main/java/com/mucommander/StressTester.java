@@ -72,7 +72,7 @@ public class StressTester implements Runnable, ActionListener {
 
             try {
                 AbstractFile parentFolder = currentFolder.getParent();
-                AbstractFile children[] = currentFolder.ls();
+                AbstractFile[] children = currentFolder.ls();
                 // 1 in 3 chance to go up if folder has children
                 if (children.length==0 || (random.nextInt(3)==0 && parentFolder!=null)) {
                     fileTable.selectFile(0);
@@ -109,7 +109,7 @@ public class StressTester implements Runnable, ActionListener {
      * Method used to start the stress tester.
      * @param args command line arguments.
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         TrolCommander.main(args);
 
         StressTester instance = new StressTester();

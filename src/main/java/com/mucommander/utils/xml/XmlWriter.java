@@ -264,7 +264,7 @@ public class XmlWriter {
         out.print(name);
 
         // Writes attributes, if any.
-        if(attributes != null) {
+        if (attributes != null) {
             Iterator<String> names;
             String           attName;
 
@@ -280,17 +280,18 @@ public class XmlWriter {
         }
 
         // Closes the element if necessary.
-        if(isStandAlone)
+        if (isStandAlone) {
             out.print('/');
-        else
+        } else {
             offset += OFFSET_INCREMENT;
-
+        }
         // Finishes the element opening sequence.
         out.print('>');
 
         // Stand-alone elements are followed by a line break.
-        if(lineBreak)
+        if (lineBreak) {
             println();
+        }
 
         if(out.checkError())
             throw new IOException();
@@ -312,7 +313,7 @@ public class XmlWriter {
         out.print('>');
         println();
 
-        if(out.checkError())
+        if (out.checkError())
             throw new IOException();
     }
 
@@ -339,10 +340,8 @@ public class XmlWriter {
      * @return             the escaped content.
      */
     public String escape(String data) {
-        int position;
-
         for (int i = 0; i < ENTITIES.length; i++) {
-            position = 0;
+            int position = 0;
             while ((position = data.indexOf(ENTITIES[i], position)) >= 0) {
                 data = data.substring(0, position) + ENTITY_REPLACEMENTS[i] +
                     (position == data.length() - 1 ? "" : data.substring(position + 1));
@@ -386,9 +385,6 @@ public class XmlWriter {
     }
 
 
-
-    // - Misc. -----------------------------------------------------------
-    // -------------------------------------------------------------------
     /**
      * Closes the XML stream.
      * @throws IOException if an I/O error occurs.

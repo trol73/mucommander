@@ -162,11 +162,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
         folderChangeInitiatedByLocationField = false;
     }
 
-
-    //////////////////////////////
-    // LocationListener methods //
-    //////////////////////////////
-
+    @Override
     public void locationChanging(LocationEvent e) {
         // Change the location field's text to the folder being changed, only if the folder change was not initiated
         // by the location field (to preserve the path entered by the user while the folder is being changed) 
@@ -184,7 +180,7 @@ public class LocationTextField extends ProgressTextField implements LocationList
             setText(locationText);
         }
 
-        // Disable component until the folder has been changed, cancelled or failed.
+        // Disable component until the folder has been changed, canceled or failed.
         // Note: if the focus currently is in the location field, the focus manager will release focus and give it
         // to the next component (i.e. FileTable)
         setEnabled(false);

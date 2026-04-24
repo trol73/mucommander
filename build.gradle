@@ -5,6 +5,7 @@ plugins {
     id 'com.gradleup.shadow' version '9.2.0'
     id 'org.jetbrains.kotlin.jvm' version '2.3.20'
     id 'com.github.ben-manes.versions' version '0.53.0'
+    id 'org.jetbrains.kotlin.plugin.lombok' version '2.3.20'
 }
 
 group = 'ru.trolsoft'
@@ -20,6 +21,7 @@ def opensJvmApps = [
     '--add-opens', 'java.desktop/sun.awt.X11=ALL-UNNAMED',
     '--add-opens', 'java.base/java.net=ALL-UNNAMED',
     '--add-opens', 'java.desktop/javax.swing.plaf.basic=ALL-UNNAMED',
+    '--add-opens', 'java.desktop/sun.awt.X11=ALL-UNNAMED',
     '--add-opens', 'java.transaction.xa/javax.transaction.xa=ALL-UNNAMED',
     '--add-opens', 'java.management/javax.management=ALL-UNNAMED',
     '--add-opens', 'java.rmi/java.rmi=ALL-UNNAMED',

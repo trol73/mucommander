@@ -7,8 +7,7 @@ import java.util.*;
  * <p>
  * This class is meant for use with {@link com.mucommander.utils.xml.XmlWriter}.
  * It's used to hold a list of XML attributes that will be passed to one of
- * the {@link com.mucommander.utils.xml.XmlWriter#startElement(String,XmlAttributes) element opening}
- * methods.
+ * the {@link com.mucommander.utils.xml.XmlWriter#startElement(String,XmlAttributes) element opening} methods.
  *
  * @author Nicolas Rinaudo, Arik Hadas
  */
@@ -21,8 +20,7 @@ public class XmlAttributes {
     /**
      * Returns the value associated with the specified attribute name.
      * @param name name of the attribute whose value should be retrieved.
-     * @return the value associated with the specified attribute name if found,
-     *         <code>null</code> otherwise.
+     * @return the value associated with the specified attribute name if found, <code>null</code> otherwise.
      */
     public String getValue(String name) {
         return attributes.get(name);
