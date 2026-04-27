@@ -119,7 +119,7 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	/********************
 	 * MuActions support
 	 ********************/
-	
+
 	public void add(AbstractFile file) {
 		addTab(defaultTabsFactory.createTab(file.getURL()));
 	}
@@ -163,15 +163,13 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 	/****************
 	 * Other Actions
 	 ****************/
-	
+
 	public void close(FileTableTabHeader fileTableTabHeader) {
 		removeTab(fileTableTabHeader);
 	}
 	
-	/**********************************
-	 * LocationListener Implementation
-	 **********************************/
-	
+
+	@Override
 	public void locationChanged(LocationEvent locationEvent) {
 		AbstractFile folder = folderPanel.getCurrentFolder();
 		if (folder != null) {
@@ -179,6 +177,7 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 		}
 	}
 
+	@Override
 	public void locationCancelled(LocationEvent locationEvent) {
 		AbstractFile folder = folderPanel.getCurrentFolder();
 		if (folder != null) {
@@ -186,13 +185,15 @@ public class FileTableTabs extends HideableTabbedPane<FileTableTab> implements L
 		}
 	}
 
+	@Override
 	public void locationFailed(LocationEvent locationEvent) {
 		AbstractFile folder = folderPanel.getCurrentFolder();
 		if (folder != null) {
 			updateTabLocation(folder.getURL());
 		}
 	}
-	
+
+	@Override
 	public void locationChanging(LocationEvent locationEvent) { }
 
 }

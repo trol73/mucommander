@@ -31,7 +31,6 @@ import com.mucommander.ui.tabs.TabsWithHeaderViewer;
 * @author Arik Hadas
 */
 public class FileTableTabsWithHeadersViewerFactory implements TabsViewerFactory<FileTableTab> {
-
 	private final FolderPanel folderPanel;
 	private final MainFrame mainFrame;
 	
@@ -40,10 +39,7 @@ public class FileTableTabsWithHeadersViewerFactory implements TabsViewerFactory<
 		this.mainFrame = mainFrame;
 	}
 
-	/***********************************
-	 * TabsViewerFactory Implementation
-	 ***********************************/
-	
+	@Override
 	public TabsViewer<FileTableTab> create(TabsCollection<FileTableTab> tabs) {
 		FileTableTabHeaderFactory headersFactory = tabs.count() == 1 ? new NotClosableFileTableTabHeaderFactory(folderPanel) : new DefaultFileTableTabHeaderFactory(folderPanel);
 		return new TabsWithHeaderViewer<>(tabs, new FileTableTabbedPane(mainFrame, folderPanel, folderPanel.getFileTable().getAsUIComponent(), headersFactory));

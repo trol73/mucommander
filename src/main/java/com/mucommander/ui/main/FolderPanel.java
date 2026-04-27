@@ -164,7 +164,6 @@ public class FolderPanel implements FocusListener, QuickListContainer, ActiveTab
 
     FolderPanel(MainFrame mainFrame, ConfFileTableTab[] initialTabs, int indexOfSelectedTab, FileTableConfiguration conf) {
         panel = PreloadedJFrame.getJPanel(new BorderLayout());
-
         log.trace(" initialTabs:");
         for (FileTableTab tab:initialTabs) {
             log.trace("\t{}", tab.getLocation() != null ? tab.getLocation().toString() : null);
@@ -196,7 +195,6 @@ public class FolderPanel implements FocusListener, QuickListContainer, ActiveTab
         c.gridx = 1;
         // Add some space between drive button and location combo box (none by default)
         c.insets = new Insets(0, 4, 0, 0);
-//        locationPanel.add(locationTextField, c);
         locationPanel.add(locationBar, c);
 
         panel.add(locationPanel, BorderLayout.NORTH);

@@ -240,10 +240,10 @@ public class MainFrame implements LocationListener {
 
         insetsPane = new JPanel(new BorderLayout()) {
             // Add an x=3,y=3 gap around content pane
-//            @Override
-//            public Insets getInsets() {
-//                return new Insets(0, 3, 3, 3);      // No top inset
-//            }
+            @Override
+            public Insets getInsets() {
+                return new Insets(0, 3, 3, 3);      // No top inset
+            }
         };
 
         // Below the toolbar there is the pane with insets

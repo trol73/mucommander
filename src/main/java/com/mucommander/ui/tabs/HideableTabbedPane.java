@@ -18,8 +18,7 @@
 
 package com.mucommander.ui.tabs;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
@@ -275,21 +274,21 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	private boolean refreshViewer() {
 		int nbTabs = tabsCollection.count();
 
-		switch (nbTabs) {
-		case 2:
-			switchToTabsWithHeaders();
-			
-			return true;
-		case 1:
-			if (showSingleTabHeader())
-				switchToTabsWithHeaders();
-			else
-				switchToTabWithoutHeader();
-			
-			return true;
-		default:
-			return false;
-		}
+        return switch (nbTabs) {
+            case 2 -> {
+                switchToTabsWithHeaders();
+                yield true;
+            }
+            case 1 -> {
+                if (showSingleTabHeader()) {
+					switchToTabsWithHeaders();
+				} else {
+					switchToTabWithoutHeader();
+				}
+                yield true;
+            }
+            default -> false;
+        };
 	}
 
 	protected boolean showSingleTabHeader() {
@@ -299,37 +298,37 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
 	protected void show(int tabIndex) {
 	}
 
-	/************************************
-	 * TabsChangeListener Implementation
-	 ************************************/
 
+	@Override
 	public void tabAdded(int index) {
 		if (!refreshViewer())
 			tabsViewer.add(tabsCollection.get(index), index);
 		
-		if(isDisplayable())
+		if (isDisplayable()) {
 			tabsViewer.setSelectedTabIndex(index);
+		}
 	}
 
+	@Override
 	public void tabRemoved(int index) {
 		int previouslySelectedIndex = tabsViewer.getSelectedTabIndex();
 
-		if (!refreshViewer())
+		if (!refreshViewer()) {
 			tabsViewer.removeTab(index);
-		else
-			selectTab(Math.max(previouslySelectedIndex-1, 0));
+		} else {
+			selectTab(Math.max(previouslySelectedIndex - 1, 0));
+		}
 	}
-	
+
+	@Override
 	public void tabUpdated(int index) {
 		tabsViewer.update(tabsCollection.get(index), index);
 		
 		fireActiveTabChanged();
 	}
 
-	/***************************************
-	 * ConfigurationListener Implementation
-	 ***************************************/
 
+	@Override
 	public void configurationChanged(ConfigurationEvent event) {
 		String var = event.getVariable();
 
@@ -338,6 +337,7 @@ public class HideableTabbedPane<T extends Tab> extends JComponent implements Tab
             refreshViewer();
 	}
 
+	@Override
 	public void stateChanged(ChangeEvent e) {
 		final int selectedIndex = tabsViewer.getSelectedTabIndex();
 

@@ -335,8 +335,8 @@ public class DesktopManager {
 
     public static void executeOperation(String type, Object[] target) throws IOException, UnsupportedOperationException {
         DesktopOperation operation = getSupportedOperation(type, target);
-
         if (operation == null) {
+            log.info("Unsupported operation {} {}", type, target);
             throw new UnsupportedOperationException();
         }
         operation.execute(target);
@@ -411,7 +411,11 @@ public class DesktopManager {
     }
 
     public static void open(AbstractFile file) throws IOException, UnsupportedOperationException {
-        executeOperation(OPEN, new Object[] {file});
+        if (file.isDirectory()) {
+            executeOperation(OPEN_IN_FILE_MANAGER, new Object[] {file});
+        } else {
+            executeOperation(OPEN, new Object[]{file});
+        }
     }
 
     public static boolean canOpenInFileManager() {

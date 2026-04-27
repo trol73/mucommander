@@ -8,8 +8,7 @@ import com.mucommander.commons.file.filter.FileFilter;
 import com.mucommander.commons.file.filter.FilenameFilter;
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.runtime.OsFamily;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.trolsoft.jni.NativeFileUtils;
 
 import java.io.File;
@@ -34,9 +33,8 @@ import java.lang.reflect.Method;
  *
  * @author Maxence Bernard
  */
+@Slf4j
 public class CachedFile extends ProxyFile {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CachedFile.class);
-
     // Used to access the java.io.FileSystem#getBooleanAttributes method
     private static final boolean GET_FILE_ATTRIBUTES_AVAILABLE;
     private static final Method M_GET_BOOLEAN_ATTRIBUTES;
@@ -150,11 +148,17 @@ public class CachedFile extends ProxyFile {
                 Field fBA_EXISTS = cFileSystem.getDeclaredField("BA_EXISTS");
                 Field fBA_DIRECTORY = cFileSystem.getDeclaredField("BA_DIRECTORY");
                 Field fBA_HIDDEN = cFileSystem.getDeclaredField("BA_HIDDEN");
-                Field fFs = cFile.getDeclaredField("fs");
+                Field fFs;
+                try {
+                    fFs = cFile.getDeclaredField("FS");
+                } catch (NoSuchFieldException e) {
+                    fFs = cFile.getDeclaredField("fs");
+                }
 
                 // Allow access to the 'getBooleanAttributes' method and to the fields we're interested in
                 mGetBooleanAttributes.setAccessible(true);
                 fFs.setAccessible(true);
+
                 fBA_EXISTS.setAccessible(true);
                 fBA_DIRECTORY.setAccessible(true);
                 fBA_HIDDEN.setAccessible(true);
@@ -164,9 +168,8 @@ public class CachedFile extends ProxyFile {
                 baDirectory = (Integer) fBA_DIRECTORY.get(null);
                 baHidden = (Integer) fBA_HIDDEN.get(null);
                 fs = fFs.get(null);
-
                 getFileAttributesAvailable = true;
-                LOGGER.trace("Access to java.io.FileSystem granted");
+                log.trace("Access to java.io.FileSystem granted");
             } catch (Exception e) {
                 getFileAttributesAvailable = false;
                 mGetBooleanAttributes = null;
@@ -174,7 +177,7 @@ public class CachedFile extends ProxyFile {
                 baDirectory = 0;
                 baHidden = 0;
                 fs = null;
-                LOGGER.info("Error while allowing access to java.io.FileSystem", e);
+                log.info("Error while allowing access to java.io.FileSystem", e);
             }
         }
         GET_FILE_ATTRIBUTES_AVAILABLE = getFileAttributesAvailable;
@@ -254,7 +257,7 @@ public class CachedFile extends ProxyFile {
             }
             bitmask |= DIRECTORY_SET_MASK | HIDDEN_SET_MASK | EXISTS_SET_MASK;
         } catch (Exception e) {
-            LOGGER.info("Could not retrieve file attributes for {}", file, e);
+            log.info("Could not retrieve file attributes for {}", file, e);
         }
     }
 

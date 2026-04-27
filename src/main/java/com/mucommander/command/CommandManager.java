@@ -56,6 +56,8 @@ public class CommandManager implements CommandBuilder {
     public static final String VIEWER_ALIAS                = "view";
     /** Alias for the default text editor. */ 
     public static final String EDITOR_ALIAS                = "edit";
+    /** Alias for the default command prompt. */
+    public final static String CMD_OPENER_ALIAS            = "openCmd";
 
 
 
@@ -172,14 +174,12 @@ public class CommandManager implements CommandBuilder {
             return command;
         }
 
-        // We haven't found a command explicitly associated with 'file',
-        // but we might have a generic file opener.
+        // We haven't found a command explicitly associated with 'file', but we might have a generic file opener
         if (defaultCommand != null) {
             return defaultCommand;
         }
 
-        // We don't have a generic file opener, return the 'self execute'
-        // command if we're allowed.
+        // We don't have a generic file opener, return the 'self execute' command if we're allowed.
         if (allowDefault) {
             return RUN_AS_EXECUTABLE_COMMAND;
         }

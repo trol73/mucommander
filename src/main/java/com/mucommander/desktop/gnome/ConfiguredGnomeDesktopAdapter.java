@@ -18,18 +18,61 @@
 
 package com.mucommander.desktop.gnome;
 
+import com.mucommander.process.ProcessRunner;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Nicolas Rinaudo
  */
+@Slf4j
 public class ConfiguredGnomeDesktopAdapter extends GnomeDesktopAdapter {
-    private static final String ENV_VAR = "GNOME_DESKTOP_SESSION_ID";
 
-    public String toString() {return "Gnome Desktop";}
+    public String toString() {
+        return "Gnome Desktop";
+    }
 
     @Override
     public boolean isAvailable() {
-        String var = System.getenv(ENV_VAR);
+        String desktopSession = System.getenv("DESKTOP_SESSION");
+        if ("gnome".equalsIgnoreCase(desktopSession)) {
+            return true;
+        }
 
-        return var != null && !var.trim().isEmpty();
+        desktopSession = System.getenv("XDG_CURRENT_DESKTOP");
+        if (desktopSession != null) {
+            desktopSession = desktopSession.toLowerCase();
+            if (desktopSession.contains("gnome"))
+                return true;
+            if (desktopSession.contains("unity"))
+                return true;
+        }
+
+        desktopSession = System.getenv("GNOME_DESKTOP_SESSION_ID");
+        return desktopSession != null && !desktopSession.trim().isEmpty();
     }
+
+    @Override
+    protected String getFileOpenerCommand() {
+        try {
+            ProcessRunner.execute(GVFS_OPEN);
+            return GVFS_OPEN;
+        } catch(Exception ignore) {
+            log.debug(GVFS_OPEN + " not found");
+        }
+        try {
+            ProcessRunner.execute(GNOME_OPEN);
+            return GNOME_OPEN;
+        } catch(Exception ignore) {
+            log.debug(GNOME_OPEN + " not found");
+        }
+        try {
+            ProcessRunner.execute(XDG_OPEN);
+            return XDG_OPEN;
+        } catch(Exception ignore) {
+            log.debug(XDG_OPEN + " not found");
+        }
+
+        return null;
+    }
+
 }

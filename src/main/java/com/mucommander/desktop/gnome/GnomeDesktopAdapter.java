@@ -22,8 +22,7 @@ import java.awt.Toolkit;
 import java.lang.reflect.Field;
 
 import com.mucommander.desktop.DesktopInitializationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.mucommander.command.Command;
 import com.mucommander.command.CommandException;
@@ -37,11 +36,15 @@ import com.mucommander.desktop.DesktopManager;
 /**
  * @author Nicolas Rinaudo, Maxence Bernard
  */
+@Slf4j
 abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GnomeDesktopAdapter.class);
-	private static final String FILE_MANAGER_NAME = "Gnome";
-	private static final String FILE_OPENER = "xdg-open $f";
-    private static final String EXE_OPENER        = "$f";
+	private static final String FILE_MANAGER_NAME = "Nautilus";
+    private static final String EXE_OPENER   = "$f";
+	protected static final String GVFS_OPEN  = "gvfs-open";
+	protected static final String GNOME_OPEN = "gnome-open";
+	protected static final String XDG_OPEN   = "xdg-open";
+	protected static final String CMD_OPENER_COMMAND = "gnome-terminal --working-directory $f";
+
 	/** Key to the double-click interval value in the GNOME configuration. */
 	private static final String DOUBLE_CLICK_CONFIG_KEY = "/desktop/gnome/peripherals/mouse/double_click";
 	/**
@@ -53,8 +56,12 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
     @Override
     public abstract boolean isAvailable();
 
+	protected abstract String getFileOpenerCommand();
+
     @Override
 	public void init(final boolean install) throws DesktopInitializationException {
+		String fileOpener = String.format("%s $f", getFileOpenerCommand());
+System.out.println("fileOpener: " + fileOpener);
 		setWMClass();
         // Workaround for JDK issue
         try {
@@ -66,14 +73,12 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
         // Initializes trash management.
         DesktopManager.setTrashProvider(new GnomeTrashProvider());
         try {
-			CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS, FILE_OPENER,
-					CommandType.SYSTEM_COMMAND, null, null));
-			CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS, FILE_OPENER,
-					CommandType.SYSTEM_COMMAND, null, null));
-			CommandManager.registerDefaultCommand(new Command(CommandManager.EXE_OPENER_ALIAS, EXE_OPENER,
-					CommandType.SYSTEM_COMMAND, null, null));
-			CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, FILE_OPENER,
-					CommandType.SYSTEM_COMMAND, FILE_MANAGER_NAME, null));
+			CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_OPENER_ALIAS, fileOpener, CommandType.SYSTEM_COMMAND, null, null));
+			CommandManager.registerDefaultCommand(new Command(CommandManager.URL_OPENER_ALIAS, fileOpener, CommandType.SYSTEM_COMMAND, null, null));
+			CommandManager.registerDefaultCommand(new Command(CommandManager.EXE_OPENER_ALIAS, EXE_OPENER, CommandType.SYSTEM_COMMAND, null, null));
+			CommandManager.registerDefaultCommand(new Command(CommandManager.FILE_MANAGER_ALIAS, fileOpener, CommandType.SYSTEM_COMMAND, FILE_MANAGER_NAME, null));
+			CommandManager.registerDefaultCommand(new Command(CommandManager.CMD_OPENER_ALIAS, CMD_OPENER_COMMAND, CommandType.SYSTEM_COMMAND, null, null));
+
             FileFilter filter = new RegexpFilenameFilter("[^.]+", true);
             // Disabled actual permissions checking as this will break normal +x files.
             // With this, a +x PDF file will not be opened.
@@ -84,22 +89,25 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
             */
             CommandManager.registerDefaultAssociation(CommandManager.EXE_OPENER_ALIAS, filter);
             // Multi-click interval retrieval
-            try {
-                String value = GnomeConfig.getValue(DOUBLE_CLICK_CONFIG_KEY);
-				if (value == null) {
-                    multiClickInterval = super.getMultiClickInterval();
-				}
-                multiClickInterval = Integer.parseInt(value);
-			} catch (Exception e) {
-            	LOGGER.debug("Error while retrieving double-click interval from gconftool", e);
-                multiClickInterval = super.getMultiClickInterval();
-            }
-        } catch (CommandException e) {
+			multiClickInterval = determineMultiClickInterval();
+		} catch (CommandException e) {
             throw new DesktopInitializationException(e);
         }
     }
 
-    /**
+	private int determineMultiClickInterval() {
+		try {
+			String value = GnomeConfig.getValue(DOUBLE_CLICK_CONFIG_KEY);
+			if (value != null) {
+				return Integer.parseInt(value);
+			}
+		} catch (Exception e) {
+			log.debug("Error while retrieving double-click interval from gconftool", e);
+		}
+		return super.getMultiClickInterval();
+	}
+
+	/**
 	 * Returns the <code>/desktop/gnome/peripherals/mouse/double_click</code> GNOME configuration
 	 * value. If the returned value is not defined or could not be retrieved, the value of
      * {@link DefaultDesktopAdapter#getMultiClickInterval()} is returned.<br>
@@ -139,11 +147,11 @@ abstract class GnomeDesktopAdapter extends DefaultDesktopAdapter {
 			awtAppClassNameField.set(null, "trolcommander-trolCommander");
 		} catch (NoSuchFieldException e) {
 			// Not running on X11/Linux, or field doesn't exist in this JDK version
-			System.out.println("DEBUG: Could not set WM_CLASS - field not found (probably not Linux/X11)");
+			log.info("DEBUG: Could not set WM_CLASS - field not found (probably not Linux/X11)");
 		} catch (IllegalAccessException e) {
-			System.err.println("Warning: Could not set WM_CLASS due to access restrictions: " + e.getMessage());
+			log.warn("Warning: Could not set WM_CLASS due to access restrictions: {}", e.getMessage());
 		} catch (Exception e) {
-			System.err.println("Warning: Unexpected error setting WM_CLASS: " + e.getMessage());
+			log.error("Warning: Unexpected error setting WM_CLASS: {}", e.getMessage());
 		}
 	}
 }

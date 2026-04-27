@@ -27,6 +27,8 @@ import com.mucommander.process.ProcessRunner;
  * @author Nicolas Rinaudo
  */
 public class GuessedGnomeDesktopAdapter extends GnomeDesktopAdapter {
+    private String fileOpenerCommand;
+
     public String toString() {
         return "Gnome Desktop (guessed)";
     }
@@ -34,13 +36,20 @@ public class GuessedGnomeDesktopAdapter extends GnomeDesktopAdapter {
     @Override
     public boolean isAvailable() {
         try {
-            ProcessRunner.execute("gvfs-open");
+            ProcessRunner.execute(GVFS_OPEN);
+            fileOpenerCommand = GVFS_OPEN;
             return true;
         } catch(Exception ignore) {}
         try {
-            ProcessRunner.execute("gnome-open");
+            ProcessRunner.execute(GNOME_OPEN);
+            fileOpenerCommand = GNOME_OPEN;
             return true;
         } catch(Exception ignore) {}
         return false;
+    }
+
+    @Override
+    protected String getFileOpenerCommand() {
+        return fileOpenerCommand;
     }
 }

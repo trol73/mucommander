@@ -20,8 +20,10 @@ package com.mucommander.ui.main.tabs;
 
 import com.mucommander.commons.file.impl.local.LocalFile;
 import com.mucommander.commons.file.util.PathUtils;
+import com.mucommander.commons.runtime.OsFamily;
 import com.mucommander.desktop.DesktopManager;
 import com.mucommander.ui.action.ActionManager;
+import com.mucommander.ui.macosx.TabbedPaneUICustomizer;
 import com.mucommander.ui.main.FolderPanel;
 import com.mucommander.ui.main.MainFrame;
 import com.mucommander.ui.tabs.TabbedPane;
@@ -35,7 +37,6 @@ import java.awt.event.MouseEvent;
 
 /**
  * TabbedPane that present the FileTable tabs.
- * 
  * This TabbedPane doesn't contain different FileTable for each tab, instead
  * it use one FileTable instance as a shared object for all tabs. when switching between
  * tabs, the FileTable instance is updated as needed according to the selected tab state.
@@ -80,9 +81,6 @@ public class FileTableTabbedPane extends TabbedPane<FileTableTab> implements Foc
 				}
 			}
 		});
-//        if (OsFamily.MAC_OS_X.isCurrent()) {
-//            TabbedPaneUICustomizer.customizeTabbedPaneUI(this);
-//        }
 		DesktopManager.customizeTabbedPaneUI(this);
 
 		addFocusListener(this);
@@ -102,12 +100,6 @@ public class FileTableTabbedPane extends TabbedPane<FileTableTab> implements Foc
 		}
 	}
 
-	/**
-	 * Not in use yet
-	 * 
-	 * @param index
-	 * @param component
-	 */
 	private void setTabHeader(int index, FileTableTabHeader component) {
 		super.setTabComponentAt(index, component);
 	}
