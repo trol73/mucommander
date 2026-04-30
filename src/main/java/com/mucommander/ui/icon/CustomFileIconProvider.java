@@ -84,7 +84,7 @@ public class CustomFileIconProvider implements FileIconProvider {
      *  <li><a href="http://www.fileinfo.net">http://www.fileinfo.net</a></li>
      * </ul>
      */
-    final static String ICON_EXTENSIONS[][] = {
+    final static String[][] ICON_EXTENSIONS = {
         {"archive_unsupported.png", "7z", "ace", "arj", "bin", "bz", "cab", "dmg", "hqx", "ipk", "lha", "lzh", "lzx", "msi", "mpkg", "pak", "pkg", "pq6", "rar", "rk", "rz", "sea", "sit", "sitx", "sqx", "z", "zoo"},	// Unsupported archive formats (no native support), see http://en.wikipedia.org/wiki/Archive_formats
         {"audio.png", "aac", "aif", "aiff", "aifc", "amr", "ape", "au", "cda", "mp3", "mpa", "mp2", "mpc", "m3u", "m4a", "m4b", "m4p", "nap", "ogg", "pls", "ra", "ram", "wav", "wave", "flac", "wma", "mid", "midi", "smf", "mod", "mtm", "xm", "s3m", "mka"},	// Audio formats, see http://en.wikipedia.org/wiki/Audio_file_format
         {"cd_image.png", "iso", "nrg"},	// CD/DVD image

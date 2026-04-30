@@ -101,7 +101,7 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
 
         // create the sortable bookmarks list panel
         SortableListPanel<Bookmark> listPanel = new SortableListPanel<>(bookmarks);
-        this.bookmarkList = listPanel.getDynamicList();
+        this.bookmarkList = listPanel.dynamicList;
 
         contentPane.add(listPanel, BorderLayout.CENTER);
 
@@ -328,18 +328,18 @@ public class EditBookmarksDialog extends FocusDialog implements ActionListener, 
         int len = name.length();
         char c;
         int num = 2;
-        if (len>4 && name.charAt(len-1)==')'
-                    && (c=name.charAt(len-2))>='0' && c<='9'
-                    && name.charAt(len-3)=='('
-                    && name.charAt(len-4)==' ')
+        if (len > 4 && name.charAt(len - 1) == ')'
+                && (c = name.charAt(len - 2)) >= '0' && c <= '9'
+                && name.charAt(len - 3) == '('
+                && name.charAt(len - 4) == ' ')
         {
-            num = (c-'0')+1;
-            name = name.substring(0, len-4);
+            num = (c - '0') + 1;
+            name = name.substring(0, len - 4);
         }
 
 
         String newName;
-        while (containsName(newName=(name+" ("+num+++")")));
+        while (containsName(newName = (name + " (" + num++ + ")"))) ;
 
         return newName;
     }

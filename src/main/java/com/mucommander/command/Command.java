@@ -403,65 +403,23 @@ public class Command implements Comparable<Command> {
      * @return the requested replacement value.
      */
     private static String getKeywordReplacement(char keyword, AbstractFile file) {
-        switch (keyword) {
-            case KEYWORD_PATH:
-                return file.getAbsolutePath();
-
-            case KEYWORD_NAME:
-                return file.getName();
-
-            case KEYWORD_PARENT:
+        return switch (keyword) {
+            case KEYWORD_PATH -> file.getAbsolutePath();
+            case KEYWORD_NAME -> file.getName();
+            case KEYWORD_PARENT -> {
                 AbstractFile parentFile = file.getParent();
-                return parentFile == null ? "" : parentFile.getAbsolutePath();
-
-            case KEYWORD_VM_PATH:
-                return new File(System.getProperty("user.dir")).getAbsolutePath();
-
-            case KEYWORD_EXTENSION:
+                yield parentFile == null ? "" : parentFile.getAbsolutePath();
+            }
+            case KEYWORD_VM_PATH -> new File(System.getProperty("user.dir")).getAbsolutePath();
+            case KEYWORD_EXTENSION -> {
                 String extension = file.getExtension();
-                return extension != null ? extension : "";
-
-            case KEYWORD_NAME_WITHOUT_EXTENSION:
-                return file.getNameWithoutExtension();
-        }
-        throw new IllegalArgumentException();
+                yield extension != null ? extension : "";
+            }
+            case KEYWORD_NAME_WITHOUT_EXTENSION -> file.getNameWithoutExtension();
+            default -> throw new IllegalArgumentException();
+        };
     }
 
-
-    // - Misc. ---------------------------------------------------------------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-    public int hashCode() {
-        int hashCode;
-
-        hashCode = alias.hashCode();
-        hashCode = hashCode * 31 + command.hashCode();
-        hashCode = hashCode * 31 + getDisplayName().hashCode();
-        hashCode = hashCode * 31 + type.hashCode();
-
-        return hashCode;
-    }
-
-    public boolean equals(Object object) {
-        if (!(object instanceof Command)) {
-            return false;
-        }
-
-        Command cmd = (Command) object;
-        return command.equals(cmd.command) && alias.equals(cmd.alias) && type == cmd.type &&
-                getDisplayName().equals(cmd.getDisplayName());
-    }
-
-    public int compareTo(@NotNull Command command) {
-        int buffer = getDisplayName().compareTo(command.getDisplayName());
-
-        if (buffer != 0) {
-            return buffer;
-        }
-        if ((buffer = getAlias().compareTo(command.getAlias())) != 0) {
-            return buffer;
-        }
-        return this.command.compareTo(command.command);
-    }
 
     /**
      * Returns the original, un-tokenized command.
@@ -513,6 +471,41 @@ public class Command implements Comparable<Command> {
     synchronized boolean isDisplayNameSet() {
         return displayName != null;
     }
+
+    @Override
+    public int hashCode() {
+        int hashCode;
+
+        hashCode = alias.hashCode();
+        hashCode = hashCode * 31 + command.hashCode();
+        hashCode = hashCode * 31 + getDisplayName().hashCode();
+        hashCode = hashCode * 31 + type.hashCode();
+
+        return hashCode;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Command cmd)) {
+            return false;
+        }
+        return command.equals(cmd.command) && alias.equals(cmd.alias) && type == cmd.type &&
+                getDisplayName().equals(cmd.getDisplayName());
+    }
+
+    @Override
+    public int compareTo(@NotNull Command command) {
+        int buffer = getDisplayName().compareTo(command.getDisplayName());
+
+        if (buffer != 0) {
+            return buffer;
+        }
+        if ((buffer = getAlias().compareTo(command.getAlias())) != 0) {
+            return buffer;
+        }
+        return this.command.compareTo(command.command);
+    }
+
 
     @Override
     public String toString() {

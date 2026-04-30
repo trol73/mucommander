@@ -19,6 +19,7 @@
 package com.mucommander.bonjour;
 
 import com.mucommander.commons.file.FileURL;
+import lombok.Getter;
 
 /**
  * A simple container for a Bonjour service described by a name and URL.
@@ -27,13 +28,21 @@ import com.mucommander.commons.file.FileURL;
  */
 public class BonjourService {
 
-    /** the unqualified name of the service, e.g. 'foobar' */
+    /** the unqualified name of the service, e.g. 'foobar'
+     * -- GETTER --
+     *  Returns the unqualified name of this service, e.g. 'foobar'.
+     */
+    @Getter
     private final String name;
 
     /** the url pointing to the service's location */
     private final FileURL url;
 
-    /** the fully qualified name of the service, e.g. 'foobar._http._tcp.local' */
+    /** the fully qualified name of the service, e.g. 'foobar._http._tcp.local'
+     * -- GETTER --
+     *  Returns the fully qualified name of this service, e.g. 'foobar._http._tcp.local'
+     */
+    @Getter
     private final String fullyQualifiedName;
 
 
@@ -50,15 +59,6 @@ public class BonjourService {
         this.fullyQualifiedName = fullyQualifiedName;
     }
 
-
-    /**
-     * Returns the unqualified name of this service, e.g. 'foobar'.
-     *
-     * @return the unqualified name of this service
-     */
-    public String getName() {
-        return name;
-    }
 
     /**
      * Returns the name appended with the URL's scheme.
@@ -78,15 +78,6 @@ public class BonjourService {
         return url;
     }
 
-    /**
-     * Returns the fully qualified name of this service, e.g. 'foobar._http._tcp.local'
-     *
-     * @return the fully qualified name of this service
-     */
-    public String getFullyQualifiedName() {
-        return fullyQualifiedName;
-    }
-
 
     /**
      * Returns <code>true</code> if the given Object is a BonjourService instance with the same fully qualified name.
@@ -94,7 +85,6 @@ public class BonjourService {
     @Override
     public boolean equals(Object o) {
         return o instanceof BonjourService && fullyQualifiedName.equals(((BonjourService) o).fullyQualifiedName);
-
     }
 
 

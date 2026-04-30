@@ -86,10 +86,6 @@ public class SilenceableOutputStream extends FilterOutputStream {
     }
 
 
-    ////////////////////////
-    // Overridden methods //
-    ////////////////////////
-
     @Override
     public void write(int b) throws IOException {
         if(silenced)

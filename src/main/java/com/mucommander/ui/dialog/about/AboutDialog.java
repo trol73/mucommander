@@ -31,7 +31,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 import javax.swing.JButton;
@@ -74,9 +74,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
     /** Style for a section title. */
     private static final String STYLE_TITLE   = "title";
     /** Line break string. */
-    private static final String LINE_BREAK    = System.getProperty("line.separator");
-
-
+    private static final String LINE_BREAK    = System.lineSeparator();
 
     /** Button that closes the dialog. */
     private JButton btnOk;
@@ -113,7 +111,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
     }
 
     /**
-     * Creates the panel that contains all of the about box's text.
+     * Creates the panel that contains all the about box's text.
      */
     private JScrollPane createCreditsPanel() {
         JTextPane text = new JTextPane();
@@ -203,7 +201,6 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 
             // External Libraries.
             insertHeader(doc,         "Libraries");
-            insertDetailedUrl(doc,    "Ant",                 "Apache License",                       "http://ant.apache.org");
             insertDetailedUrl(doc,    "Apache Commons",      "Apache License",                       "http://commons.apache.org");
             insertDetailedUrl(doc,    "Apache Hadoop",       "Apache License",                       "http://hadoop.apache.org");
             insertDetailedUrl(doc,    "Furbelow",            "LGPL",                                 "http://sourceforge.net/projects/furbelow");
@@ -227,13 +224,10 @@ public class AboutDialog extends FocusDialog implements ActionListener {
 
             // External tools.
             insertHeader(doc,         "Tools");
-            insertDetailedUrl(doc,    "Ant",                 "Apache Software License",              "http://ant.apache.org");
-            insertDetailedUrl(doc,    "AntDoclet",           "GPL",                                  "http://antdoclet.neuroning.com/");
             insertDetailedUrl(doc,    "jdeb",                "Apache Software License",              "http://vafer.org/projects/jdeb/");
             insertDetailedUrl(doc,    "Launch4j",            "GPL",                                  "http://launch4j.sourceforge.net");
             insertDetailedUrl(doc,    "NSIS",                "zlib/libpng license",                  "http://nsis.sourceforge.net");
             insertDetailedUrl(doc,    "p7zip",               "LGPL",                                 "http://p7zip.sourceforge.net");
-            insertDetailedUrl(doc,    "ProGuard",            "GPL",                                  "http://proguard.sourceforge.net");
             insertLineBreak(doc);
             insertLineBreak(doc);
 
@@ -247,7 +241,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertLineBreak(doc);
 
             // VM information.
-            insertHeader(doc,         "Java");
+            insertHeader(doc,         "JVM");
             insertNormalString(doc,   "Runtime version: " + System.getProperty("java.version"));
             insertNormalString(doc,   "VM name: " + System.getProperty("java.vm.name"));
             insertNormalString(doc,   "VM version: " + System.getProperty("java.vm.version"));
@@ -266,7 +260,7 @@ public class AboutDialog extends FocusDialog implements ActionListener {
             insertHeader(doc,         "Locale");
             insertNormalString(doc,   "Language: " + locale.getLanguage());
             insertNormalString(doc,   "Country: " + locale.getCountry());
-            insertNormalString(doc,   "Encoding: " + System.getProperty("file.encoding"));
+            insertNormalString(doc,   "Encoding: " + Charset.defaultCharset().displayName());
         } catch(Exception ignore) {}
 
         textPanel = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

@@ -1,6 +1,6 @@
 /*
  * This file is part of trolCommander, http://www.trolsoft.ru/en/soft/trolcommander
- * Copyright (C) 2013-2025 Oleg Trifonov
+ * Copyright (C) 2013-2026 Oleg Trifonov
  *
  * trolCommander is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package com.mucommander.ui.terminal;
 
+import com.jediterm.terminal.CursorShape;
 import com.jediterm.terminal.model.StyleState;
 import com.jediterm.terminal.model.TerminalTextBuffer;
 import com.jediterm.terminal.ui.settings.SettingsProvider;
@@ -45,6 +46,7 @@ public class JediTerminalPanelEx extends com.jediterm.terminal.ui.TerminalPanel 
         super(settingsProvider, terminalTextBuffer, styleState);
         this.mainFrame = mainFrame;
         this.keyModifier = OsFamily.MAC_OS_X.isCurrent() ? KeyEvent.META_DOWN_MASK : KeyEvent.CTRL_DOWN_MASK;
+        setDefaultCursorShape(CursorShape.BLINK_VERTICAL_BAR);
     }
 
 

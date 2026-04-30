@@ -18,6 +18,8 @@
 
 package com.mucommander.ui.tabs;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -196,11 +198,9 @@ public class TabsCollection<T extends Tab> implements java.lang.Iterable<T> {
 			listener.tabUpdated(index);
 		}
     }
-    
-	/**************************
-	 * Iterable implementation
-	 **************************/
 
+	@NotNull
+    @Override
 	public Iterator<T> iterator() {
 		return collection.iterator();
 	}
