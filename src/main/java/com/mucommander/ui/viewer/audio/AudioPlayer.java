@@ -24,20 +24,15 @@ import javax.swing.JPanel;
  * Created on 14/03/14.
  */
 public class AudioPlayer extends JPanel {
-    private JButton btnPrev;
-    private JButton btnPlay;
-    private JButton btnStop;
-    private JButton btnPause;
-    private JButton btnNext;
 
     public AudioPlayer() {
         super();
 
-        btnPrev = new JButton("<<");
-        btnPlay = new JButton(">");
-        btnStop = new JButton("x");
-        btnPause = new JButton("||");
-        btnNext = new JButton(">>");
+        JButton btnPrev = new JButton("<<");
+        JButton btnPlay = new JButton(">");
+        JButton btnStop = new JButton("x");
+        JButton btnPause = new JButton("||");
+        JButton btnNext = new JButton(">>");
 
         add(btnPrev);
         add(btnPlay);

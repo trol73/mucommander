@@ -262,14 +262,14 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lnfPanel.setBorder(BorderFactory.createTitledBorder(Translator.get("prefs_dialog.look_and_feel")));
 
         // Creates the look and feel combo box.
-        lookAndFeelComboBox = new PrefComboBox<String>() {
+        lookAndFeelComboBox = new PrefComboBox<>() {
             public boolean hasChanged() {
                 String lnf = getVariable(LOOK_AND_FEEL);
                 int selectedIndex = getSelectedIndex();
                 return selectedIndex >= 0 && !lookAndFeels[selectedIndex].getClassName().equals(lnf);
             }
         };
-        lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<String>() {
+        lookAndFeelComboBox.setRenderer(new BasicComboBoxRenderer<>() {
             @Override
             public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -305,7 +305,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // At the time of writing, the 'brushed metal' look causes the JVM to crash randomly under Leopard (10.5)
         // so we disable brushed metal on that OS version but leave it for earlier versions where it works fine.
         // See http://www.mucommander.com/forums/viewtopic.php?f=4&t=746 for more info about this issue.
-        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrLower()); {
+        if (OsFamily.MAC_OS_X.isCurrent() && OsVersion.MAC_OS_X_10_4.isCurrentOrLower()) {
             // 'Use brushed metal look' option
             brushedMetalCheckBox = new PrefCheckBox(Translator.get("prefs_dialog.use_brushed_metal"),
                     checkBox -> !String.valueOf(checkBox.isSelected()).equals(getVariable(USE_BRUSHED_METAL)));
@@ -366,7 +366,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lblType = new JLabel("");
 
         // Creates the theme combo box.
-        themeComboBox = new PrefComboBox<Theme>() {
+        themeComboBox = new PrefComboBox<>() {
             public boolean hasChanged() {
                 return !ThemeManager.isCurrentTheme(getSelectedItem());
             }
@@ -376,7 +376,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         // Sets the combobox's renderer.
         lockIcon = IconManager.getIcon(IconManager.IconSet.PREFERENCES, "lock.png");
         transparentIcon = new ImageIcon(new BufferedImage(lockIcon.getIconWidth(), lockIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB));
-        themeComboBox.setRenderer(new BasicComboBoxRenderer<Theme>() {
+        themeComboBox.setRenderer(new BasicComboBoxRenderer<>() {
             @Override
             public Component getListCellRendererComponent(JList<? extends Theme> list, Theme theme, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel) super.getListCellRendererComponent(list, theme, index, isSelected, cellHasFocus);
@@ -415,7 +415,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
     private JPanel createSyntaxHighlightThemePanel() {
         JPanel gridPanel = new ProportionalGridPanel(1);
 
-        syntaxThemeComboBox = new PrefComboBox<String>(ThemeManager.predefinedSyntaxThemeNames()) {
+        syntaxThemeComboBox = new PrefComboBox<>(ThemeManager.predefinedSyntaxThemeNames()) {
             @Override
             public boolean hasChanged() {
                 String selectedTheme = getSelectedItem();
@@ -467,19 +467,13 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      */
     private JPanel createSystemIconsPanel() {
         // 'Use system file icons' combo box
-        this.useSystemFileIconsComboBox = new PrefComboBox<String>() {
+        this.useSystemFileIconsComboBox = new PrefComboBox<>() {
             public boolean hasChanged() {
-                String systemIconsPolicy;
-                switch (useSystemFileIconsComboBox.getSelectedIndex()) {
-                    case 0:
-                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_NEVER;
-                        break;
-                    case 1:
-                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
-                        break;
-                    default:
-                        systemIconsPolicy = FileIcons.USE_SYSTEM_ICONS_ALWAYS;
-                }
+                String systemIconsPolicy = switch (useSystemFileIconsComboBox.getSelectedIndex()) {
+                    case 0 -> FileIcons.USE_SYSTEM_ICONS_NEVER;
+                    case 1 -> FileIcons.USE_SYSTEM_ICONS_APPLICATIONS;
+                    default -> FileIcons.USE_SYSTEM_ICONS_ALWAYS;
+                };
                 return !systemIconsPolicy.equals(getVariable(USE_SYSTEM_FILE_ICONS, systemIconsPolicy));
             }
         };
@@ -500,12 +494,11 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
      * Creates a combo box that allows to choose a size for a certain type of icon. The returned combo box is filled
      * with allowed choices, and the current configuration value is selected.
      *
-     * @param preference
      * @param defaultValue the default value for the icon scale factor if the configuration variable has no value
      * @return a combo box that allows to choose a size for a certain type of icon
      */
     private PrefComboBox<String> createIconSizeCombo(final TcPreference preference, float defaultValue) {
-    	PrefComboBox<String> iconSizeCombo = new PrefComboBox<String>(ICON_SIZES) {
+    	PrefComboBox<String> iconSizeCombo = new PrefComboBox<>(ICON_SIZES) {
             public boolean hasChanged() {
                 return !String.valueOf(ICON_SCALE_FACTORS[getSelectedIndex()]).equals(getVariable(preference));
             }
@@ -594,7 +587,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
         lookAndFeels = UIManager.getInstalledLookAndFeels();
 
         // Sorts them.
-        Arrays.sort(lookAndFeels, new Comparator<UIManager.LookAndFeelInfo>() {
+        Arrays.sort(lookAndFeels, new Comparator<>() {
             public int compare(UIManager.LookAndFeelInfo a, UIManager.LookAndFeelInfo b) {
                 return a.getName().compareTo(b.getName());
             }
@@ -997,7 +990,7 @@ class AppearancePanel extends PreferencesPanel implements ActionListener, Runnab
 
             // Makes sure the file's extension is .xml.
             try {
-                if(!"xml".equalsIgnoreCase(file.getExtension()))    // Note: getExtension() may return null if no extension
+                if (!"xml".equalsIgnoreCase(file.getExtension()))    // Note: getExtension() may return null if no extension
                     file = lastSelectedFolder.getDirectChild(file.getName()+".xml");
 
                 int collision = FileCollisionChecker.checkForCollision(null, file);

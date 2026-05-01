@@ -129,17 +129,12 @@ public class SystemDefaultColor extends DefaultColor implements PropertyChangeLi
      * @return the fallback color of the right {@link #type type}.
      */
     private Color getColor() {
-        switch(type) {
-            case FOREGROUND:
-                return DEFAULT_FOREGROUND;
-            case SELECTION_FOREGROUND:
-                return DEFAULT_SELECTION_FOREGROUND;
-            case SELECTION_BACKGROUND:
-                return DEFAULT_SELECTION_BACKGROUND;
-            case BACKGROUND:
-            default:
-                return DEFAULT_BACKGROUND;
-        }
+        return switch (type) {
+            case FOREGROUND -> DEFAULT_FOREGROUND;
+            case SELECTION_FOREGROUND -> DEFAULT_SELECTION_FOREGROUND;
+            case SELECTION_BACKGROUND -> DEFAULT_SELECTION_BACKGROUND;
+            default -> DEFAULT_BACKGROUND;
+        };
     }
 
     @Override

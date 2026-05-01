@@ -56,7 +56,7 @@ public class StringStream {
     }
 
     public boolean hasRemains() {
-        return lastIncomplete != null && lastIncomplete.length() > 0;
+        return lastIncomplete != null && !lastIncomplete.isEmpty();
     }
 
     private StringBuffer getLastIncomplete() {

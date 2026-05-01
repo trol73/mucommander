@@ -297,10 +297,6 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
         return bestMatch;
     }
 
-	//////////////////////
-	// Abstract methods //
-	//////////////////////
-
 	/**
 	 * Hook that is called after the search is started
 	 */
@@ -349,9 +345,6 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
 	 */
 	protected abstract void matchNotFound(String searchString);
 
-    //////////////////////
-    // Runnable methods //
-    //////////////////////
 
     public void run() {
         do {
@@ -368,16 +361,12 @@ public abstract class QuickSearch extends KeyAdapter implements Runnable {
         } while(timeoutThread != null);
     }
 
-    ///////////////////////////////
-    // KeyAdapter implementation //
-    ///////////////////////////////
-    
+
     @Override
     public synchronized void keyReleased(KeyEvent e) {
         // Cancel quick search if backspace key has been pressed and search string is empty.
-        // This check is done on key release, so that if backspace key is maintained pressed
-        // to remove all the search string, it does not trigger the JComponent's back action 
-    	// which is mapped on backspace too
+        // This check is done on key release, so that if backspace key is maintained pressed to remove all the search
+        // string, it does not trigger the JComponent's back action which is mapped on backspace too
         if (isActive() && e.getKeyCode() == KeyEvent.VK_BACK_SPACE && searchString.isEmpty()) {
             e.consume();
             stop();

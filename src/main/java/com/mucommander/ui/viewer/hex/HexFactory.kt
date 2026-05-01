@@ -15,31 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.mucommander.ui.viewer.hex;
+package com.mucommander.ui.viewer.hex
 
-import com.mucommander.commons.file.AbstractFile;
-import com.mucommander.utils.text.Translator;
-import com.mucommander.ui.viewer.FileViewer;
-import com.mucommander.ui.viewer.ViewerFactory;
+import com.mucommander.commons.file.AbstractFile
+import com.mucommander.ui.viewer.FileViewer
+import com.mucommander.ui.viewer.ViewerFactory
+import com.mucommander.utils.text.Translator
 
 /**
- * <code>ViewerFactory</code> implementation for creating hex viewers.
- *
+ * `ViewerFactory` implementation for creating hex viewers.
+ * 
  * @author Oleg Trifonov
  */
-public class HexFactory implements ViewerFactory {
-    @Override
-    public boolean canViewFile(AbstractFile file) {
-        return !file.isDirectory();
-    }
+class HexFactory : ViewerFactory {
+    override fun canViewFile(file: AbstractFile): Boolean =
+        !file.isDirectory()
 
-    @Override
-    public FileViewer createFileViewer() {
-        return new HexViewer();
-    }
+    override fun createFileViewer(): FileViewer =
+        HexViewer()
 
-    @Override
-    public String getName() {
-        return Translator.get("viewer_type.hex");
-    }
+    override fun getName(): String =
+        Translator.get("viewer_type.hex")
 }

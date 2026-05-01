@@ -27,14 +27,13 @@ import java.awt.GridBagConstraints;
  * Created on 14/03/14.
  */
 public class StatusBar extends org.fife.ui.StatusBar {
-    private StatusBarPanel panel;
-    private JLabel lbl;
+    private final JLabel lbl;
 
     public StatusBar() {
         super("");
 
         lbl = new JLabel();
-        panel = new StatusBarPanel(new BorderLayout(), lbl);
+        StatusBarPanel panel = new StatusBarPanel(new BorderLayout(), lbl);
 
         // Make the layout such that different items can be different sizes.
         GridBagConstraints c = new GridBagConstraints();

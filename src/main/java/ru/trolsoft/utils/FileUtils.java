@@ -28,7 +28,6 @@ import java.net.URISyntaxException;
 public class FileUtils {
 
     public static void copyFileFromJar(String src, String dest, boolean overwrite) throws IOException {
-System.out.println("copyFileFromJar " + src + " " + dest);
         File fileDest = new File(dest);
         if (!overwrite && fileDest.exists() && fileDest.length() > 0) {
             return;

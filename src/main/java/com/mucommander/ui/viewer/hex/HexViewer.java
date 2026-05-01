@@ -54,7 +54,7 @@ public class HexViewer extends FileViewer implements ThemeId {
     private ViewerHexTableModel model;
     private AbstractByteBuffer byteBuffer;
     private StatusBar statusBar;
-    private String encoding = DEFAULT_ENCODING;
+    private final String encoding = DEFAULT_ENCODING;
     private byte[] lastSearchBytes;
 
     private final JMenu menuView;
@@ -135,7 +135,7 @@ public class HexViewer extends FileViewer implements ThemeId {
             offsetChangeListener.onChange(0);
 
             if (statusBar != null) {
-                statusBar.setMaxOffset(file.getSize() - 1);
+                statusBar.maxOffset = file.getSize() - 1;
                 statusBar.setOffset(hexTable.getCurrentAddress());
             }
 

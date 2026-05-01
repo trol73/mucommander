@@ -103,36 +103,36 @@ public class Translator {
         }
 
         getLogger().info("Using language set in preferences: " + localeNameFromConf);
-        switch (localeNameFromConf) {
+        return switch (localeNameFromConf) {
             // for backward compatibility
-            case "EN": return Locale.forLanguageTag("en-US");
-            case "en_GB": return Locale.forLanguageTag("en-GB");
-            case "FR": return Locale.forLanguageTag("fr-FR");
-            case "DE": return Locale.forLanguageTag("de-DE");
-            case "ES": return Locale.forLanguageTag("es-ES");
-            case "CS": return Locale.forLanguageTag("cs-CZ");
-            case "zh_CN": return Locale.forLanguageTag("zh-CN");
-            case "zh_TW": return Locale.forLanguageTag("zh-TW");
-            case "PL": return Locale.forLanguageTag("pl-PL");
-            case "HU": return Locale.forLanguageTag("hu-HU");
-            case "RU": return Locale.forLanguageTag("ru-RU");
-            case "SL": return Locale.forLanguageTag("sl-SL");
-            case "RO": return Locale.forLanguageTag("ro-RO");
-            case "IT": return Locale.forLanguageTag("it-IT");
-            case "KO": return Locale.forLanguageTag("ko-KR");
-            case "pt_BR": return Locale.forLanguageTag("pt-BR");
-            case "NL": return Locale.forLanguageTag("nl-NL");
-            case "SK": return Locale.forLanguageTag("sk-SK");
-            case "JA": return Locale.forLanguageTag("ja-JP");
-            case "SV": return Locale.forLanguageTag("sv-SV");
-            case "DA": return Locale.forLanguageTag("da-DA");
-            case "UA": return Locale.forLanguageTag("uk-UA");
-            case "AR": return Locale.forLanguageTag("ar-SA");
-            case "BE": return Locale.forLanguageTag("be-BY");
-            case "NB": return Locale.forLanguageTag("no-NO");
-            case "CA": return Locale.forLanguageTag("ca-ES");
-            default: return Locale.forLanguageTag(localeNameFromConf);
-        }
+            case "EN" -> Locale.forLanguageTag("en-US");
+            case "en_GB" -> Locale.forLanguageTag("en-GB");
+            case "FR" -> Locale.forLanguageTag("fr-FR");
+            case "DE" -> Locale.forLanguageTag("de-DE");
+            case "ES" -> Locale.forLanguageTag("es-ES");
+            case "CS" -> Locale.forLanguageTag("cs-CZ");
+            case "zh_CN" -> Locale.forLanguageTag("zh-CN");
+            case "zh_TW" -> Locale.forLanguageTag("zh-TW");
+            case "PL" -> Locale.forLanguageTag("pl-PL");
+            case "HU" -> Locale.forLanguageTag("hu-HU");
+            case "RU" -> Locale.forLanguageTag("ru-RU");
+            case "SL" -> Locale.forLanguageTag("sl-SL");
+            case "RO" -> Locale.forLanguageTag("ro-RO");
+            case "IT" -> Locale.forLanguageTag("it-IT");
+            case "KO" -> Locale.forLanguageTag("ko-KR");
+            case "pt_BR" -> Locale.forLanguageTag("pt-BR");
+            case "NL" -> Locale.forLanguageTag("nl-NL");
+            case "SK" -> Locale.forLanguageTag("sk-SK");
+            case "JA" -> Locale.forLanguageTag("ja-JP");
+            case "SV" -> Locale.forLanguageTag("sv-SV");
+            case "DA" -> Locale.forLanguageTag("da-DA");
+            case "UA" -> Locale.forLanguageTag("uk-UA");
+            case "AR" -> Locale.forLanguageTag("ar-SA");
+            case "BE" -> Locale.forLanguageTag("be-BY");
+            case "NB" -> Locale.forLanguageTag("no-NO");
+            case "CA" -> Locale.forLanguageTag("ca-ES");
+            default -> Locale.forLanguageTag(localeNameFromConf);
+        };
     }
 
     private static Locale matchLocale(Locale loadedLocale) {

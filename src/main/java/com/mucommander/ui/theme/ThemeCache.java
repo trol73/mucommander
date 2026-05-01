@@ -374,13 +374,11 @@ public class ThemeCache implements ThemeListener {
      * Receives theme font changes notifications.
      */
     public void fontChanged(FontChangedEvent event) {
-    	switch (event.getFontId()) {
-            case Theme.FILE_TABLE_FONT:
-                tableFont = event.getFont();
-                break;
-            default:
-                return;
-     	}
+        if (event.getFontId() == Theme.FILE_TABLE_FONT) {
+            tableFont = event.getFont();
+        } else {
+            return;
+        }
     	fireFontChanged(event);
     }
 	
