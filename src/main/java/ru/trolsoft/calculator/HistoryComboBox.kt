@@ -54,7 +54,7 @@ class HistoryComboBox(
 
 
     fun addToHistory(s: String) {
-        for (i in 0..<itemCount) {
+        for (i in 0..< itemCount) {
             val item = getItemAt(i)
             if (item.equals(s, ignoreCase = true)) {
                 removeItem(item)

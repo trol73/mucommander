@@ -23,8 +23,6 @@ import com.mucommander.ui.helper.MnemonicHelper
 import com.mucommander.ui.layout.XAlignedComponentPanel
 import com.mucommander.ui.layout.XBoxPanel
 import com.mucommander.ui.layout.YBoxPanel
-import de.congrace.exp4j.CustomOperator
-import de.congrace.exp4j.ExpressionBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import ru.trolsoft.utils.StrUtils
@@ -40,7 +38,6 @@ import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
-import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 /**
@@ -50,6 +47,7 @@ import kotlin.math.roundToLong
 class CalculatorDialog(
     owner: Frame
 ) : FocusDialog(owner, i18n("calculator.calculator"), null), ActionListener, KeyListener {
+    private val calculator = Calculator()
     private val cbExpression: HistoryComboBox
     private val edtDec: JTextField
     private val edtHex: JTextField
@@ -220,19 +218,11 @@ class CalculatorDialog(
     }
 
     @Throws(Exception::class)
-    private fun evaluate(expression: String): Double {
-        if (expression.trim { it <= ' ' }.isEmpty()) {
-            return 0.0
-        }
-        return ExpressionBuilder(expression).apply {
-            withOperations(OPERATORS)
-            withVariable("pi", Math.PI)
-            withVariable("e", Math.E)
-        }.build().calculate()
-    }
+    private fun evaluate(expression: String): Double =
+        calculator.calculate(expression)
 
-    private fun formatExp(`val`: Double): String {
-        var result = FORMAT_EXP.format(`val`).uppercase(Locale.getDefault())
+    private fun formatExp(v: Double): String {
+        var result = FORMAT_EXP.format(v).uppercase(Locale.getDefault())
         val index = result.indexOf('E')
         if (index > 0 && result[index + 1] != '-') {
             result = result.substring(0, index) + '+' + result.substring(index)
@@ -283,49 +273,9 @@ class CalculatorDialog(
     }
 
     companion object {
-        private val MIN_DIMENSION = Dimension(520, 300)
         private val log: Logger = LoggerFactory.getLogger(CalculatorDialog::class.java)
-
-        private fun opLL(values: DoubleArray, operation: (Long, Long) -> Long): Double =
-            operation(values[0].roundToLong(), values[1].roundToLong()).toDouble()
-        private fun opLI(values: DoubleArray, operation: (Long, Int) -> Long): Double =
-            operation(values[0].roundToLong(), values[1].roundToInt()).toDouble()
-
-        private val OP_SHL = object : CustomOperator("<<", true, 10, 2) {
-            protected override fun applyOperation(values: DoubleArray) =
-                opLI(values) { a: Long, b: Int -> a shl b }
-        }
-
-        private val OP_SHR = object : CustomOperator(">>", true, 11, 2) {
-            protected override fun applyOperation(values: DoubleArray) =
-                opLI(values) { a: Long, b: Int -> a shr b }
-        }
-
-        private val OP_AND = object : CustomOperator("&", true, 8, 2) {
-            protected override fun applyOperation(values: DoubleArray) =
-                opLL(values) { a: Long, b: Long -> a and b }
-        }
-
-        private val OP_OR = object : CustomOperator("|", true, 6, 2) {
-            protected override fun applyOperation(values: DoubleArray) =
-                opLL(values) { a: Long, b: Long -> a or b }
-        }
-
-        private val OP_NOT = object : CustomOperator("~", true, 15, 1) {
-            protected override fun applyOperation(values: DoubleArray) =
-                values[0].roundToLong().inv().toDouble()
-        }
-
-        private val OP_XOR = object : CustomOperator("^^", true, 7, 2) {
-            protected override fun applyOperation(values: DoubleArray) =
-                opLL(values) { a: Long, b: Long -> a xor b }
-        }
-
+        private val MIN_DIMENSION = Dimension(520, 300)
         private val FORMAT_DEC = DecimalFormat("#.##################")
         private val FORMAT_EXP = DecimalFormat("0.00000000000000E0000")
-
-        private val OPERATORS = listOf(
-            OP_SHL, OP_SHR, OP_AND, OP_OR, OP_NOT, OP_XOR
-        )
     }
 }

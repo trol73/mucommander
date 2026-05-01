@@ -189,7 +189,6 @@ dependencies {
 
     implementation 'net.java.dev.jna:jna:5.18.1'
     implementation 'net.java.dev.jna:jna-platform:5.18.1'
-    implementation 'de.congrace:exp4j:0.3.11'
     implementation 'com.fifesoft.rtext:fife.common:6.0.3'
     implementation 'org.jmdns:jmdns:3.6.3'
     implementation 'com.sshtools:j2ssh-maverick:1.5.5'
